@@ -1,0 +1,278 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { format, isSunday } from 'date-fns';
+
+export type Route = {
+  id: string;
+  name: string;
+  driver: string;
+  driverPhone: string;
+  monitorName: string;
+  monitorPhone: string;
+};
+
+export type Student = {
+  id: string;
+  name: string;
+  address: string;
+  class: string;
+  school: string;
+  routeId: string;
+  contact1Name: string;
+  contact1Phone: string;
+  contact2Name: string;
+  contact2Phone: string;
+  createdAt?: string;
+};
+
+export type AttendanceRecord = {
+  id: string;
+  studentId: string;
+  date: string; // YYYY-MM-DD
+  boarding: boolean;
+  alighting: boolean;
+  boardingTime?: string;
+  alightingTime?: string;
+};
+
+export type Incident = {
+  id: string;
+  studentId: string;
+  routeId: string;
+  type: 'indiscipline' | 'health' | 'other';
+  severity: 'low' | 'medium' | 'high';
+  monitorName: string;
+  description: string;
+  date: string; // YYYY-MM-DD HH:mm
+};
+
+type AppState = {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+  routes: Route[];
+  students: Student[];
+  attendance: AttendanceRecord[];
+  incidents: Incident[];
+  addRoute: (route: Omit<Route, 'id'>) => void;
+  updateRoute: (id: string, route: Partial<Route>) => void;
+  deleteRoute: (id: string) => void;
+  addStudent: (student: Omit<Student, 'id' | 'createdAt'>) => void;
+  updateStudent: (id: string, student: Partial<Student>) => void;
+  deleteStudent: (id: string) => void;
+  markAttendance: (studentId: string, date: string, type: 'boarding' | 'alighting', value: boolean) => void;
+  addIncident: (incident: Omit<Incident, 'id' | 'date'>) => void;
+  deleteIncident: (id: string) => void;
+};
+
+const defaultState: AppState = {
+  theme: 'light',
+  toggleTheme: () => {},
+  routes: [],
+  students: [],
+  attendance: [],
+  incidents: [],
+  addRoute: () => {},
+  updateRoute: () => {},
+  deleteRoute: () => {},
+  addStudent: () => {},
+  updateStudent: () => {},
+  deleteStudent: () => {},
+  markAttendance: () => {},
+  addIncident: () => {},
+  deleteIncident: () => {},
+};
+
+const AppContext = createContext<AppState>(defaultState);
+
+export const useAppContext = () => useContext(AppContext);
+
+// Initial mock data
+const initialRoutes: Route[] = [
+  { id: 'r1', name: 'Rota Pelourinho', driver: 'João Silva', driverPhone: '(71) 99999-0001', monitorName: 'Carla Dias', monitorPhone: '(71) 98888-0002' },
+  { id: 'r2', name: 'Rota Rio Vermelho', driver: 'Maria Santos', driverPhone: '(71) 97777-0003', monitorName: 'Pedro Alves', monitorPhone: '(71) 96666-0004' },
+];
+
+const initialStudents: Student[] = [
+  {
+    id: 's1',
+    name: 'Dandara dos Santos',
+    address: 'Rua das Laranjeiras, 12',
+    class: '5º Ano A',
+    school: 'Escola Municipal Zumbi dos Palmares',
+    routeId: 'r1',
+    contact1Name: 'Mãe (Ana)',
+    contact1Phone: '(71) 99999-1111',
+    contact2Name: 'Avó (Lúcia)',
+    contact2Phone: '(71) 98888-2222',
+  },
+  {
+    id: 's2',
+    name: 'Zumbi Oliveira',
+    address: 'Ladeira do Carmo, 45',
+    class: '6º Ano B',
+    school: 'Escola Municipal Zumbi dos Palmares',
+    routeId: 'r1',
+    contact1Name: 'Pai (Carlos)',
+    contact1Phone: '(71) 97777-3333',
+    contact2Name: 'Tio (Marcos)',
+    contact2Phone: '(71) 96666-4444',
+  },
+  {
+    id: 's3',
+    name: 'Luiza Mahin',
+    address: 'Av. Oceânica, 100',
+    class: '4º Ano C',
+    school: 'Escola Municipal Castro Alves',
+    routeId: 'r2',
+    contact1Name: 'Mãe (Teresa)',
+    contact1Phone: '(71) 95555-5555',
+    contact2Name: 'Irmão (Pedro)',
+    contact2Phone: '(71) 94444-6666',
+  },
+];
+
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('school_theme');
+    return (saved as 'light' | 'dark') || 'light';
+  });
+
+  const [routes, setRoutes] = useState<Route[]>(() => {
+    const saved = localStorage.getItem('school_routes');
+    return saved ? JSON.parse(saved) : initialRoutes;
+  });
+
+  const [students, setStudents] = useState<Student[]>(() => {
+    const saved = localStorage.getItem('school_students');
+    return saved ? JSON.parse(saved) : initialStudents;
+  });
+
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>(() => {
+    const saved = localStorage.getItem('school_attendance');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [incidents, setIncidents] = useState<Incident[]>(() => {
+    const saved = localStorage.getItem('school_incidents');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('school_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('school_routes', JSON.stringify(routes));
+  }, [routes]);
+
+  useEffect(() => {
+    localStorage.setItem('school_students', JSON.stringify(students));
+  }, [students]);
+
+  useEffect(() => {
+    localStorage.setItem('school_attendance', JSON.stringify(attendance));
+  }, [attendance]);
+
+  useEffect(() => {
+    localStorage.setItem('school_incidents', JSON.stringify(incidents));
+  }, [incidents]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  const addRoute = (route: Omit<Route, 'id'>) => {
+    setRoutes([...routes, { ...route, id: Math.random().toString(36).substr(2, 9) }]);
+  };
+
+  const updateRoute = (id: string, updatedRoute: Partial<Route>) => {
+    setRoutes(routes.map(r => r.id === id ? { ...r, ...updatedRoute } : r));
+  };
+
+  const deleteRoute = (id: string) => {
+    setRoutes(routes.filter(r => r.id !== id));
+    setStudents(students.map(s => s.routeId === id ? { ...s, routeId: '' } : s));
+  };
+
+  const addStudent = (student: Omit<Student, 'id' | 'createdAt'>) => {
+    setStudents([...students, { ...student, id: Math.random().toString(36).substr(2, 9), createdAt: new Date().toISOString() }]);
+  };
+
+  const updateStudent = (id: string, updatedStudent: Partial<Student>) => {
+    setStudents(students.map(s => s.id === id ? { ...s, ...updatedStudent } : s));
+  };
+
+  const deleteStudent = (id: string) => {
+    setStudents(students.filter(s => s.id !== id));
+    setAttendance(attendance.filter(a => a.studentId !== id));
+    setIncidents(incidents.filter(i => i.studentId !== id));
+  };
+
+  const markAttendance = (studentId: string, date: string, type: 'boarding' | 'alighting', value: boolean) => {
+    const dateObj = new Date(date + 'T12:00:00');
+    if (isSunday(dateObj)) {
+      alert("O check-in está fechado aos domingos. O sistema só contabiliza de segunda a sábado.");
+      return;
+    }
+
+    setAttendance(prev => {
+      const existingIndex = prev.findIndex(a => a.studentId === studentId && a.date === date);
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      if (existingIndex >= 0) {
+        const updated = [...prev];
+        const record = { ...updated[existingIndex] };
+        
+        if (type === 'boarding') {
+          record.boarding = value;
+          record.boardingTime = value ? now : undefined;
+        } else {
+          record.alighting = value;
+          record.alightingTime = value ? now : undefined;
+        }
+        
+        updated[existingIndex] = record;
+        return updated;
+      } else {
+        return [...prev, {
+          id: Math.random().toString(36).substr(2, 9),
+          studentId,
+          date,
+          boarding: type === 'boarding' ? value : false,
+          alighting: type === 'alighting' ? value : false,
+          boardingTime: type === 'boarding' && value ? now : undefined,
+          alightingTime: type === 'alighting' && value ? now : undefined,
+        }];
+      }
+    });
+  };
+
+  const addIncident = (incident: Omit<Incident, 'id' | 'date'>) => {
+    const now = new Date();
+    setIncidents([{
+      ...incident,
+      id: Math.random().toString(36).substr(2, 9),
+      date: format(now, 'yyyy-MM-dd HH:mm')
+    }, ...incidents]);
+  };
+
+  const deleteIncident = (id: string) => {
+    setIncidents(incidents.filter(i => i.id !== id));
+  };
+
+  return (
+    <AppContext.Provider value={{
+      theme, toggleTheme,
+      routes, students, attendance, incidents,
+      addRoute, updateRoute, deleteRoute,
+      addStudent, updateStudent, deleteStudent,
+      markAttendance, addIncident, deleteIncident
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
