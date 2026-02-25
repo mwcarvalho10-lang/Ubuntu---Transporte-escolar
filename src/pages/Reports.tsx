@@ -163,7 +163,7 @@ export const Reports: React.FC = () => {
                       <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full ${
-                            student.boardingRate >= 80 ? 'bg-green-500' : 
+                            student.boardingRate >= 80 ? 'bg-indigo-500' : 
                             student.boardingRate >= 50 ? 'bg-school-yellow' : 'bg-red-500'
                           }`}
                           style={{ width: `${student.boardingRate}%` }}

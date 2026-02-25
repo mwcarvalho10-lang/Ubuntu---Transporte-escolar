@@ -31,7 +31,10 @@ export const Auth: React.FC = () => {
         return;
       }
       const fullEmail = `${emailPrefix}${emailDomain}`;
-      const role = emailDomain === '@gestao.com' ? 'manager' : 'monitor';
+      let role: 'admin' | 'manager' | 'monitor' = 'monitor';
+      if (emailDomain === '@admin.com') role = 'admin';
+      else if (emailDomain === '@gestao.com') role = 'manager';
+      
       const result = register(fullEmail, name, password, role);
       if (!result.success) {
         setError(result.error || 'Erro ao criar conta.');
@@ -105,10 +108,11 @@ export const Auth: React.FC = () => {
                   >
                     <option value="@gestao.com">@gestao.com</option>
                     <option value="@monitor.com">@monitor.com</option>
+                    <option value="@admin.com">@admin.com</option>
                   </select>
                 </div>
                 <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                  {emailDomain === '@gestao.com' ? 'Acesso total ao sistema.' : 'Acesso restrito a presença e ocorrências.'}
+                  {emailDomain === '@admin.com' ? 'Acesso total e gerenciamento de usuários.' : emailDomain === '@gestao.com' ? 'Acesso total ao sistema.' : 'Acesso restrito a presença e ocorrências.'}
                 </p>
               </div>
             )}

@@ -10,6 +10,7 @@ import { Reports } from './pages/Reports';
 import { Incidents } from './pages/Incidents';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
+import { Admin } from './pages/Admin';
 
 const AppRoutes = () => {
   const { currentUser } = useAppContext();
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           <Route path="communication" element={<Communication />} />
           <Route path="reports" element={<Reports />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -91,7 +91,7 @@ export const RoutesPage: React.FC = () => {
                   {route.driverPhone && (
                     <button 
                       onClick={() => handleWhatsApp(route.driverPhone)}
-                      className="p-2 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-500 hover:text-white dark:hover:bg-green-500 dark:hover:text-white rounded-xl transition-colors"
+                      className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-school-blue hover:text-white dark:hover:bg-school-yellow dark:hover:text-school-blue rounded-xl transition-colors"
                       title="WhatsApp Motorista"
                     >
                       <MessageCircle size={18} />
@@ -106,7 +106,7 @@ export const RoutesPage: React.FC = () => {
                   {route.monitorPhone && (
                     <button 
                       onClick={() => handleWhatsApp(route.monitorPhone)}
-                      className="p-2 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-500 hover:text-white dark:hover:bg-green-500 dark:hover:text-white rounded-xl transition-colors"
+                      className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-school-blue hover:text-white dark:hover:bg-school-yellow dark:hover:text-school-blue rounded-xl transition-colors"
                       title="WhatsApp Monitor"
                     >
                       <MessageCircle size={18} />

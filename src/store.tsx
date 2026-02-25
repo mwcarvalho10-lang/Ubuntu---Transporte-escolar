@@ -6,7 +6,7 @@ export type UserProfile = {
   email: string;
   password?: string; // Stored locally for simulation
   name: string;
-  role: 'manager' | 'monitor' | null;
+  role: 'admin' | 'manager' | 'monitor' | null;
   routeId?: string;
 };
 
@@ -60,9 +60,10 @@ type AppState = {
   currentUser: UserProfile | null;
   users: UserProfile[];
   login: (email: string, password?: string) => boolean;
-  register: (email: string, name: string, password?: string, role?: 'manager' | 'monitor' | null) => { success: boolean; error?: string };
+  register: (email: string, name: string, password?: string, role?: 'admin' | 'manager' | 'monitor' | null) => { success: boolean; error?: string };
   logout: () => void;
   updateProfile: (profile: Partial<UserProfile>) => void;
+  deleteUser: (id: string) => void;
   routes: Route[];
   students: Student[];
   attendance: AttendanceRecord[];
@@ -87,6 +88,7 @@ const defaultState: AppState = {
   register: () => ({ success: false }),
   logout: () => {},
   updateProfile: () => {},
+  deleteUser: () => {},
   routes: [],
   students: [],
   attendance: [],
@@ -233,7 +235,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return false;
   };
 
-  const register = (email: string, name: string, password?: string, role: 'manager' | 'monitor' | null = null) => {
+  const register = (email: string, name: string, password?: string, role: 'admin' | 'manager' | 'monitor' | null = null) => {
     if (users.some(u => u.email === email)) {
       return { success: false, error: 'Este email já está em uso.' };
     }
@@ -266,6 +268,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updatedUser = { ...currentUser, ...profile };
     setCurrentUser(updatedUser);
     setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
+  };
+
+  const deleteUser = (id: string) => {
+    setUsers(users.filter(u => u.id !== id));
+    if (currentUser?.id === id) {
+      setCurrentUser(null);
+    }
   };
 
   const toggleTheme = () => {
@@ -354,7 +363,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider value={{
       theme, toggleTheme,
-      currentUser, users, login, register, logout, updateProfile,
+      currentUser, users, login, register, logout, updateProfile, deleteUser,
       routes, students, attendance, incidents,
       addRoute, updateRoute, deleteRoute,
       addStudent, updateStudent, deleteStudent,

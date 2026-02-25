@@ -102,14 +102,14 @@ export const Dashboard: React.FC = () => {
           value={stats.boarded} 
           subtitle={`${stats.pendingBoarding} pendentes`}
           icon={CheckCircle} 
-          color="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400" 
+          color="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400" 
         />
         <StatCard 
           title="Desembarcaram Hoje" 
           value={stats.alighted} 
           subtitle={`${stats.pendingAlighting} pendentes`}
           icon={CheckCircle} 
-          color="bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400" 
+          color="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300" 
         />
         <StatCard 
           title="Ocorrências Hoje" 

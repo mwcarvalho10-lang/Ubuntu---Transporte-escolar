@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Search, Moon, Sun, Menu, X, Shield } from 'lucide-react';
 import { useAppContext } from '../store';
 
 const navItems = [
@@ -38,7 +38,7 @@ export const Layout: React.FC = () => {
   };
 
   const filteredNavItems = navItems.filter(item => {
-    if (currentUser?.role === 'manager') return true;
+    if (currentUser?.role === 'admin' || currentUser?.role === 'manager') return true;
     if (currentUser?.role === 'monitor') {
       return ['/attendance', '/incidents'].includes(item.to);
     }
@@ -90,6 +90,21 @@ export const Layout: React.FC = () => {
         </nav>
         
         <div className="p-4 border-t border-white/10 space-y-2">
+          {currentUser?.role === 'admin' && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? 'bg-school-yellow text-school-blue font-semibold shadow-md translate-x-1'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }`
+              }
+            >
+              <Shield size={20} />
+              <span>Admin</span>
+            </NavLink>
+          )}
           <NavLink
             to="/profile"
             className={({ isActive }) =>

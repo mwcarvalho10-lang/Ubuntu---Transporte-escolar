@@ -135,8 +135,8 @@ export const Incidents: React.FC = () => {
 
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
                   incident.type === 'indiscipline' ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400' :
-                  incident.type === 'health' ? 'bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400' :
-                  'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                  incident.type === 'health' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' :
+                  'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}>
                   <AlertCircle size={28} />
                 </div>
@@ -153,15 +153,15 @@ export const Incidents: React.FC = () => {
                       <div className="flex gap-2 justify-start sm:justify-end mt-1">
                         <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md inline-block ${
                           incident.type === 'indiscipline' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300' :
-                          incident.type === 'health' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300' :
-                          'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                          incident.type === 'health' ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' :
+                          'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                         }`}>
                           {incident.type === 'indiscipline' ? 'Indisciplina' : incident.type === 'health' ? 'Saúde' : 'Outros'}
                         </span>
                         <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md inline-block ${
                           incident.severity === 'high' ? 'bg-red-500 text-white' :
-                          incident.severity === 'medium' ? 'bg-orange-400 text-white' :
-                          'bg-green-500 text-white'
+                          incident.severity === 'medium' ? 'bg-indigo-500 text-white' :
+                          'bg-slate-500 text-white'
                         }`}>
                           {incident.severity === 'high' ? 'Alta' : incident.severity === 'medium' ? 'Média' : 'Baixa'}
                         </span>
@@ -245,7 +245,7 @@ export const Incidents: React.FC = () => {
                       onClick={() => setIncidentType('health')}
                       className={`py-2 px-3 rounded-xl border font-medium text-sm transition-colors ${
                         incidentType === 'health' 
-                          ? 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400' 
+                          ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400' 
                           : 'bg-white dark:bg-slate-700 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600'
                       }`}
                     >
@@ -256,7 +256,7 @@ export const Incidents: React.FC = () => {
                       onClick={() => setIncidentType('other')}
                       className={`py-2 px-3 rounded-xl border font-medium text-sm transition-colors ${
                         incidentType === 'other' 
-                          ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400' 
+                          ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-400' 
                           : 'bg-white dark:bg-slate-700 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600'
                       }`}
                     >
@@ -273,7 +273,7 @@ export const Incidents: React.FC = () => {
                       onClick={() => setSeverity('low')}
                       className={`py-2 px-3 rounded-xl border font-medium text-sm transition-colors ${
                         severity === 'low' 
-                          ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400' 
+                          ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-400' 
                           : 'bg-white dark:bg-slate-700 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600'
                       }`}
                     >
@@ -284,7 +284,7 @@ export const Incidents: React.FC = () => {
                       onClick={() => setSeverity('medium')}
                       className={`py-2 px-3 rounded-xl border font-medium text-sm transition-colors ${
                         severity === 'medium' 
-                          ? 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400' 
+                          ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400' 
                           : 'bg-white dark:bg-slate-700 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600'
                       }`}
                     >

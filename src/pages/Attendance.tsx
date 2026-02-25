@@ -130,7 +130,7 @@ export const Attendance: React.FC = () => {
       )}
 
       {isTodaySunday ? (
-        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-300 p-8 rounded-3xl text-center shadow-sm">
+        <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300 p-8 rounded-3xl text-center shadow-sm">
           <h2 className="text-2xl font-bold mb-2 font-serif">Check-in Fechado</h2>
           <p className="text-lg">O sistema de presença não opera aos domingos. O funcionamento é de segunda a sábado.</p>
         </div>
@@ -164,14 +164,14 @@ export const Attendance: React.FC = () => {
                           onClick={() => markAttendance(student.id, today, 'boarding', !isBoarded)}
                           className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 shadow-sm ${
                             isBoarded 
-                              ? 'bg-green-500 text-white shadow-green-500/30 scale-105' 
+                              ? 'bg-indigo-500 text-white shadow-indigo-500/30 scale-105' 
                               : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-slate-500 hover:bg-gray-200 dark:hover:bg-slate-600'
                           }`}
                         >
                           {isBoarded ? <Check size={28} /> : <X size={28} />}
                         </button>
                         {isBoarded && record?.boardingTime && (
-                          <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-2">{record.boardingTime}</p>
+                          <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium mt-2">{record.boardingTime}</p>
                         )}
                       </td>
                       <td className="p-6 text-center">
