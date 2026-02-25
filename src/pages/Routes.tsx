@@ -34,14 +34,14 @@ export const RoutesPage: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Rotas</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">Gerencie as rotas e veículos</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Rotas</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">Gerencie as rotas e veículos</p>
         </div>
         <button 
           onClick={() => { setEditingRoute(null); setIsModalOpen(true); }}
-          className="bg-school-yellow hover:bg-school-yellow-hover text-school-blue px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center gap-2 transition-colors"
+          className="w-full sm:w-auto bg-school-yellow hover:bg-school-yellow-hover text-school-blue px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-colors"
         >
           <Plus size={20} />
           Nova Rota
@@ -138,7 +138,7 @@ export const RoutesPage: React.FC = () => {
                   <input name="name" defaultValue={editingRoute?.name} required placeholder="Ex: Rota Pelourinho" className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Motorista</label>
                     <input name="driver" defaultValue={editingRoute?.driver} required className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
@@ -149,7 +149,7 @@ export const RoutesPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Monitor(a)</label>
                     <input name="monitorName" defaultValue={editingRoute?.monitorName} required className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />

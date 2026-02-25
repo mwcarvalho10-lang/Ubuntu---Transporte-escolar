@@ -66,14 +66,14 @@ export const Students: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Alunos</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">Gerencie o cadastro dos estudantes</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Alunos</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">Gerencie o cadastro dos estudantes</p>
         </div>
         <button 
           onClick={() => { setEditingStudent(null); setIsModalOpen(true); }}
-          className="bg-school-yellow hover:bg-school-yellow-hover text-school-blue px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center gap-2 transition-colors"
+          className="w-full sm:w-auto bg-school-yellow hover:bg-school-yellow-hover text-school-blue px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-colors"
         >
           <Plus size={20} />
           Novo Aluno

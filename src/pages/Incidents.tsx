@@ -66,14 +66,14 @@ export const Incidents: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Ocorrências</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">Registro e histórico de incidentes</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Ocorrências</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">Registro e histórico de incidentes</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center gap-2 transition-colors"
+          className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-colors"
         >
           <Plus size={20} />
           Nova Ocorrência
@@ -124,7 +124,7 @@ export const Incidents: React.FC = () => {
             const route = routes.find(r => r.id === student?.routeId);
             
             return (
-              <div key={incident.id} className="p-6 hover:bg-gray-50/50 dark:hover:bg-slate-700/50 transition-colors flex gap-6 group relative">
+              <div key={incident.id} className="p-6 hover:bg-gray-50/50 dark:hover:bg-slate-700/50 transition-colors flex flex-col sm:flex-row gap-4 sm:gap-6 group relative">
                 <button
                   onClick={() => handleDelete(incident.id)}
                   className="absolute top-6 right-6 p-2 bg-red-50 dark:bg-red-900/30 text-red-500 hover:bg-red-500 hover:text-white rounded-xl opacity-0 group-hover:opacity-100 transition-all"
@@ -140,17 +140,17 @@ export const Incidents: React.FC = () => {
                 }`}>
                   <AlertCircle size={28} />
                 </div>
-                <div className="flex-1 pr-12">
-                  <div className="flex justify-between items-start mb-2">
+                <div className="flex-1 sm:pr-12">
+                  <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 font-serif">{student?.name || 'Aluno Excluído'}</h3>
                       <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{route?.name || 'Sem rota'} • {student?.class || 'Sem turma'} • Monitor(a): {incident.monitorName}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <span className="text-sm font-semibold text-gray-900 dark:text-slate-300 block">
                         {format(new Date(incident.date), "dd 'de' MMMM", { locale: ptBR })}
                       </span>
-                      <div className="flex gap-2 justify-end mt-1">
+                      <div className="flex gap-2 justify-start sm:justify-end mt-1">
                         <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md inline-block ${
                           incident.type === 'indiscipline' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300' :
                           incident.type === 'health' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300' :

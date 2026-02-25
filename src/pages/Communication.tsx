@@ -13,20 +13,20 @@ export const Communication: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Comunicação</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">Contatos dos responsáveis por aluno</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Comunicação</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">Contatos dos responsáveis por aluno</p>
         </div>
         
-        <div className="flex items-center gap-4 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+        <div className="flex items-center gap-4 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 w-full sm:w-auto">
           <div className="p-2 bg-blue-50 dark:bg-slate-700 text-school-blue dark:text-school-yellow rounded-xl">
             <Filter size={20} />
           </div>
           <select 
             value={selectedRoute}
             onChange={(e) => setSelectedRoute(e.target.value)}
-            className="bg-transparent border-none focus:ring-0 text-gray-700 dark:text-slate-200 font-medium pr-8 cursor-pointer"
+            className="bg-transparent border-none focus:ring-0 text-gray-700 dark:text-slate-200 font-medium pr-8 cursor-pointer w-full"
           >
             <option value="all">Todas as Rotas</option>
             {routes.map(r => (

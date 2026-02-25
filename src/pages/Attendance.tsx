@@ -93,15 +93,15 @@ export const Attendance: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Controle de Presença</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Controle de Presença</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">
             {format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })}
           </p>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
           {unlockedRouteId === 'all' && (
             <div className="bg-school-yellow text-school-blue px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
               Modo Administrador
@@ -109,7 +109,7 @@ export const Attendance: React.FC = () => {
           )}
           <button 
             onClick={() => setUnlockedRouteId(null)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors font-medium border border-gray-200 dark:border-slate-700"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors font-medium border border-gray-200 dark:border-slate-700"
           >
             <Lock size={18} />
             Bloquear Tela

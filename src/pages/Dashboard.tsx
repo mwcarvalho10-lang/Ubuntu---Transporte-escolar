@@ -72,14 +72,14 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Painel de Controle</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Painel de Controle</h1>
+          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">
             Visão geral de hoje, {format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
         </div>
-        <div className="bg-school-yellow text-school-blue px-6 py-2 rounded-full font-semibold shadow-md">
+        <div className="bg-school-yellow text-school-blue px-6 py-2 rounded-full font-semibold shadow-md text-sm sm:text-base">
           Sincronizado
         </div>
       </header>
@@ -121,9 +121,9 @@ export const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-school-blue dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-school-blue/20 dark:border-slate-700 flex flex-col justify-center items-center text-center relative overflow-hidden group">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent group-hover:opacity-20 transition-opacity duration-700"></div>
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-school-yellow via-transparent to-transparent group-hover:opacity-20 transition-opacity duration-700"></div>
           <h2 className="text-5xl font-bold text-school-yellow mb-6 font-serif relative z-10">Ubuntu</h2>
-          <p className="text-2xl text-white/90 font-light italic relative z-10 max-w-md leading-relaxed">
+          <p className="text-2xl text-school-yellow/90 font-light italic relative z-10 max-w-md leading-relaxed">
             "Eu sou porque nós somos."
           </p>
           <div className="mt-8 w-16 h-1 bg-school-yellow rounded-full relative z-10"></div>

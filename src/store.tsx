@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { format, isSunday } from 'date-fns';
 
+export type UserProfile = {
+  id: string;
+  email: string;
+  password?: string; // Stored locally for simulation
+  name: string;
+  role: 'manager' | 'monitor' | null;
+  routeId?: string;
+};
+
 export type Route = {
   id: string;
   name: string;
@@ -48,6 +57,12 @@ export type Incident = {
 type AppState = {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
+  currentUser: UserProfile | null;
+  users: UserProfile[];
+  login: (email: string, password?: string) => boolean;
+  register: (email: string, name: string, password?: string, role?: 'manager' | 'monitor' | null) => { success: boolean; error?: string };
+  logout: () => void;
+  updateProfile: (profile: Partial<UserProfile>) => void;
   routes: Route[];
   students: Student[];
   attendance: AttendanceRecord[];
@@ -66,6 +81,12 @@ type AppState = {
 const defaultState: AppState = {
   theme: 'light',
   toggleTheme: () => {},
+  currentUser: null,
+  users: [],
+  login: () => false,
+  register: () => ({ success: false }),
+  logout: () => {},
+  updateProfile: () => {},
   routes: [],
   students: [],
   attendance: [],
@@ -136,6 +157,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return (saved as 'light' | 'dark') || 'light';
   });
 
+  const [users, setUsers] = useState<UserProfile[]>(() => {
+    const saved = localStorage.getItem('school_users');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    const saved = localStorage.getItem('school_current_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [routes, setRoutes] = useState<Route[]>(() => {
     const saved = localStorage.getItem('school_routes');
     return saved ? JSON.parse(saved) : initialRoutes;
@@ -180,6 +211,62 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem('school_incidents', JSON.stringify(incidents));
   }, [incidents]);
+
+  useEffect(() => {
+    localStorage.setItem('school_users', JSON.stringify(users));
+  }, [users]);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('school_current_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('school_current_user');
+    }
+  }, [currentUser]);
+
+  const login = (email: string, password?: string) => {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      setCurrentUser(user);
+      return true;
+    }
+    return false;
+  };
+
+  const register = (email: string, name: string, password?: string, role: 'manager' | 'monitor' | null = null) => {
+    if (users.some(u => u.email === email)) {
+      return { success: false, error: 'Este email já está em uso.' };
+    }
+
+    if (role === 'monitor') {
+      const isMonitorInRoutes = routes.some(r => r.monitorName.toLowerCase() === name.toLowerCase());
+      if (!isMonitorInRoutes) {
+        return { success: false, error: 'Monitor não cadastrado em nenhuma rota. Verifique o nome com a gestão.' };
+      }
+    }
+
+    const newUser: UserProfile = {
+      id: Math.random().toString(36).substr(2, 9),
+      email,
+      name,
+      password,
+      role,
+    };
+    setUsers([...users, newUser]);
+    setCurrentUser(newUser);
+    return { success: true };
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+  };
+
+  const updateProfile = (profile: Partial<UserProfile>) => {
+    if (!currentUser) return;
+    const updatedUser = { ...currentUser, ...profile };
+    setCurrentUser(updatedUser);
+    setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
+  };
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -267,6 +354,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider value={{
       theme, toggleTheme,
+      currentUser, users, login, register, logout, updateProfile,
       routes, students, attendance, incidents,
       addRoute, updateRoute, deleteRoute,
       addStudent, updateStudent, deleteStudent,
