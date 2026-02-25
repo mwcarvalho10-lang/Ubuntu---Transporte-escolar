@@ -54,9 +54,22 @@ export type Incident = {
   date: string; // YYYY-MM-DD HH:mm
 };
 
+export type SchoolYearPeriod = {
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD
+};
+
+export type Notification = {
+  id: string;
+  title: string;
+  message: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  date: string;
+  read: boolean;
+  link?: string;
+};
+
 type AppState = {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
   currentUser: UserProfile | null;
   users: UserProfile[];
   login: (email: string, password?: string) => boolean;
@@ -68,6 +81,12 @@ type AppState = {
   students: Student[];
   attendance: AttendanceRecord[];
   incidents: Incident[];
+  schoolYearPeriod: SchoolYearPeriod | null;
+  updateSchoolYearPeriod: (period: SchoolYearPeriod) => void;
+  notifications: Notification[];
+  addNotification: (notification: Omit<Notification, 'id' | 'date' | 'read'>) => void;
+  markNotificationAsRead: (id: string) => void;
+  clearNotifications: () => void;
   addRoute: (route: Omit<Route, 'id'>) => void;
   updateRoute: (id: string, route: Partial<Route>) => void;
   deleteRoute: (id: string) => void;
@@ -80,8 +99,6 @@ type AppState = {
 };
 
 const defaultState: AppState = {
-  theme: 'light',
-  toggleTheme: () => {},
   currentUser: null,
   users: [],
   login: () => false,
@@ -93,6 +110,12 @@ const defaultState: AppState = {
   students: [],
   attendance: [],
   incidents: [],
+  schoolYearPeriod: null,
+  updateSchoolYearPeriod: () => {},
+  notifications: [],
+  addNotification: () => {},
+  markNotificationAsRead: () => {},
+  clearNotifications: () => {},
   addRoute: () => {},
   updateRoute: () => {},
   deleteRoute: () => {},
@@ -154,11 +177,6 @@ const initialStudents: Student[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('school_theme');
-    return (saved as 'light' | 'dark') || 'light';
-  });
-
   const [users, setUsers] = useState<UserProfile[]>(() => {
     const saved = localStorage.getItem('school_users');
     return saved ? JSON.parse(saved) : [];
@@ -189,14 +207,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [schoolYearPeriod, setSchoolYearPeriod] = useState<SchoolYearPeriod | null>(() => {
+    const saved = localStorage.getItem('school_year_period');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    const saved = localStorage.getItem('school_notifications');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   useEffect(() => {
-    localStorage.setItem('school_theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('school_routes', JSON.stringify(routes));
@@ -213,6 +236,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem('school_incidents', JSON.stringify(incidents));
   }, [incidents]);
+
+  useEffect(() => {
+    localStorage.setItem('school_year_period', JSON.stringify(schoolYearPeriod));
+  }, [schoolYearPeriod]);
+
+  useEffect(() => {
+    localStorage.setItem('school_notifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   useEffect(() => {
     localStorage.setItem('school_users', JSON.stringify(users));
@@ -295,7 +326,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addStudent = (student: Omit<Student, 'id' | 'createdAt'>) => {
-    setStudents([...students, { ...student, id: Math.random().toString(36).substr(2, 9), createdAt: new Date().toISOString() }]);
+    const newStudent = { ...student, id: Math.random().toString(36).substr(2, 9), createdAt: new Date().toISOString() };
+    setStudents([...students, newStudent]);
+    addNotification({
+      title: 'Novo Aluno Cadastrado',
+      message: `${student.name} foi adicionado(a) à rota ${routes.find(r => r.id === student.routeId)?.name || 'Não informada'}.`,
+      type: 'success',
+      link: `/students?search=${newStudent.id}`
+    });
   };
 
   const updateStudent = (id: string, updatedStudent: Partial<Student>) => {
@@ -349,22 +387,52 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addIncident = (incident: Omit<Incident, 'id' | 'date'>) => {
     const now = new Date();
-    setIncidents([{
+    const newIncident: Incident = {
       ...incident,
       id: Math.random().toString(36).substr(2, 9),
       date: format(now, 'yyyy-MM-dd HH:mm')
-    }, ...incidents]);
+    };
+    setIncidents([newIncident, ...incidents]);
+    addNotification({
+      title: 'Nova Ocorrência Registrada',
+      message: `Uma ocorrência de ${incident.type === 'indiscipline' ? 'indisciplina' : incident.type === 'health' ? 'saúde' : 'outros'} foi registrada para o aluno ${students.find(s => s.id === incident.studentId)?.name}.`,
+      type: incident.severity === 'high' ? 'error' : 'warning',
+      link: '/incidents'
+    });
   };
 
   const deleteIncident = (id: string) => {
     setIncidents(incidents.filter(i => i.id !== id));
   };
 
+  const updateSchoolYearPeriod = (period: SchoolYearPeriod) => {
+    setSchoolYearPeriod(period);
+  };
+
+  const addNotification = (notification: Omit<Notification, 'id' | 'date' | 'read'>) => {
+    const newNotification: Notification = {
+      ...notification,
+      id: Math.random().toString(36).substr(2, 9),
+      date: new Date().toISOString(),
+      read: false,
+    };
+    setNotifications([newNotification, ...notifications]);
+  };
+
+  const markNotificationAsRead = (id: string) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
   return (
     <AppContext.Provider value={{
-      theme, toggleTheme,
       currentUser, users, login, register, logout, updateProfile, deleteUser,
       routes, students, attendance, incidents,
+      schoolYearPeriod, updateSchoolYearPeriod,
+      notifications, addNotification, markNotificationAsRead, clearNotifications,
       addRoute, updateRoute, deleteRoute,
       addStudent, updateStudent, deleteStudent,
       markAttendance, addIncident, deleteIncident

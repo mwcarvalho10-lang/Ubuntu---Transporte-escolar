@@ -1,14 +1,28 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { useAppContext } from '../store';
-import { format } from 'date-fns';
+import React, { useMemo } from 'react';
+import { useAppContext, Notification } from '../store';
+import { format, isWithinInterval, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Users, Bus, CheckCircle, AlertCircle, Bell, X } from 'lucide-react';
+import { Users, Bus, CheckCircle, AlertCircle, Bell, X, Calendar, Info, CheckCircle2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
-  const { students, routes, attendance, incidents } = useAppContext();
-  const [showNotification, setShowNotification] = useState(false);
+  const { students, routes, attendance, incidents, schoolYearPeriod, notifications, markNotificationAsRead } = useAppContext();
+  const navigate = useNavigate();
   
   const today = format(new Date(), 'yyyy-MM-dd');
+  const todayDate = new Date();
+
+  const isWithinPeriod = useMemo(() => {
+    if (!schoolYearPeriod) return true;
+    try {
+      return isWithinInterval(todayDate, {
+        start: parseISO(schoolYearPeriod.startDate),
+        end: parseISO(schoolYearPeriod.endDate)
+      });
+    } catch (e) {
+      return true;
+    }
+  }, [schoolYearPeriod, todayDate]);
   
   const todayAttendance = useMemo(() => {
     return attendance.filter(a => a.date === today);
@@ -22,11 +36,16 @@ export const Dashboard: React.FC = () => {
     return students.filter(s => s.createdAt && s.createdAt.startsWith(today));
   }, [students, today]);
 
-  useEffect(() => {
-    if (todayIncidents.length > 0 || todayNewStudents.length > 0) {
-      setShowNotification(true);
+  const recentNotifications = useMemo(() => {
+    return notifications.slice(0, 4);
+  }, [notifications]);
+
+  const handleNotificationClick = (notification: Notification) => {
+    markNotificationAsRead(notification.id);
+    if (notification.link) {
+      navigate(notification.link);
     }
-  }, [todayIncidents.length, todayNewStudents.length]);
+  };
 
   const stats = useMemo(() => {
     const totalStudents = students.length;
@@ -48,38 +67,28 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {showNotification && (
-        <div className="bg-red-500 text-white px-6 py-4 rounded-2xl shadow-lg flex items-center justify-between animate-in slide-in-from-top-4">
+      {!isWithinPeriod && (
+        <div className="bg-orange-500 text-white px-6 py-4 rounded-3xl shadow-xl flex items-center justify-between animate-in slide-in-from-top-4 border-4 border-orange-600/50">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <Bell className="animate-bounce" size={28} />
-              <span className="absolute -top-2 -right-2 bg-white text-red-500 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
-                {todayIncidents.length + todayNewStudents.length}
-              </span>
+            <div className="p-3 bg-white/20 rounded-2xl">
+              <Calendar className="animate-pulse" size={32} />
             </div>
             <div>
-              <p className="font-bold text-lg">Atenção!</p>
-              {todayIncidents.length > 0 && <p>Há {todayIncidents.length} nova(s) ocorrência(s) registrada(s) hoje.</p>}
-              {todayNewStudents.length > 0 && <p>Há {todayNewStudents.length} novo(s) aluno(s) registrado(s) hoje.</p>}
+              <p className="font-bold text-xl">Fora do Período Letivo</p>
+              <p className="text-orange-50 opacity-90">O sistema está em modo de visualização. O ano letivo definido é de {schoolYearPeriod?.startDate} até {schoolYearPeriod?.endDate}.</p>
             </div>
           </div>
-          <button 
-            onClick={() => setShowNotification(false)}
-            className="p-2 hover:bg-red-600 rounded-full transition-colors"
-          >
-            <X size={20} />
-          </button>
         </div>
       )}
 
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Painel de Controle</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-text dark:text-dark-text font-serif">Painel de Controle</h1>
+          <p className="text-school-text/60 dark:text-dark-text/60 mt-2 text-base sm:text-lg">
             Visão geral de hoje, {format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
         </div>
-        <div className="bg-school-yellow text-school-blue px-6 py-2 rounded-full font-semibold shadow-md text-sm sm:text-base">
+        <div className="bg-accent-mustard text-accent-brown px-6 py-2 rounded-full font-semibold shadow-md text-sm sm:text-base">
           Sincronizado
         </div>
       </header>
@@ -89,27 +98,27 @@ export const Dashboard: React.FC = () => {
           title="Total de Alunos" 
           value={stats.totalStudents} 
           icon={Users} 
-          color="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" 
+          color="bg-accent-mustard/10 text-accent-brown dark:text-accent-mustard" 
         />
         <StatCard 
           title="Rotas Ativas" 
           value={stats.totalRoutes} 
           icon={Bus} 
-          color="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400" 
+          color="bg-accent-terracotta/10 text-accent-terracotta" 
         />
         <StatCard 
           title="Embarcaram Hoje" 
           value={stats.boarded} 
           subtitle={`${stats.pendingBoarding} pendentes`}
           icon={CheckCircle} 
-          color="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400" 
+          color="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400" 
         />
         <StatCard 
           title="Desembarcaram Hoje" 
           value={stats.alighted} 
           subtitle={`${stats.pendingAlighting} pendentes`}
           icon={CheckCircle} 
-          color="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300" 
+          color="bg-accent-brown/10 text-accent-brown dark:text-accent-mustard" 
         />
         <StatCard 
           title="Ocorrências Hoje" 
@@ -120,38 +129,57 @@ export const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-school-blue dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-school-blue/20 dark:border-slate-700 flex flex-col justify-center items-center text-center relative overflow-hidden group">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-school-yellow via-transparent to-transparent group-hover:opacity-20 transition-opacity duration-700"></div>
-          <h2 className="text-5xl font-bold text-school-yellow mb-6 font-serif relative z-10">Ubuntu</h2>
-          <p className="text-2xl text-school-yellow/90 font-light italic relative z-10 max-w-md leading-relaxed">
+        <div className="school-card p-8 flex flex-col justify-center items-center text-center relative overflow-hidden group min-h-[300px]">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent-mustard via-transparent to-transparent group-hover:opacity-20 transition-opacity duration-700"></div>
+          <h2 className="text-5xl font-bold text-accent-mustard mb-6 font-serif relative z-10">Ubuntu</h2>
+          <p className="text-2xl text-school-text/90 dark:text-dark-text/90 font-light italic relative z-10 max-w-md leading-relaxed">
             "Eu sou porque nós somos."
           </p>
-          <div className="mt-8 w-16 h-1 bg-school-yellow rounded-full relative z-10"></div>
+          <div className="mt-8 w-16 h-1 bg-accent-mustard rounded-full relative z-10"></div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700">
-          <h2 className="text-2xl font-bold text-school-blue dark:text-school-yellow mb-6 font-serif">Últimos Registros</h2>
+        <div className="school-card p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-school-text dark:text-dark-text font-serif">Notificações Recentes</h2>
+            <Bell size={20} className="text-school-sankofa" />
+          </div>
           <div className="space-y-4">
-            {students.slice(0, 5).map(student => {
-              const record = todayAttendance.find(a => a.studentId === student.id);
-              return (
-                <div key={student.id} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-slate-600">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-slate-700 text-school-blue dark:text-school-yellow flex items-center justify-center font-bold text-lg border-2 border-school-yellow/30">
-                    {student.name.charAt(0)}
+            {recentNotifications.length > 0 ? (
+              recentNotifications.map(notification => (
+                <div 
+                  key={notification.id} 
+                  onClick={() => handleNotificationClick(notification)}
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex gap-4 ${
+                    !notification.read 
+                      ? 'bg-accent-mustard/10 border-accent-mustard/20 shadow-sm' 
+                      : 'bg-school-bg/30 dark:bg-dark-bg/30 border-transparent opacity-70'
+                  }`}
+                >
+                  <div className={`mt-1 shrink-0 ${
+                    notification.type === 'success' ? 'text-green-500' :
+                    notification.type === 'warning' ? 'text-orange-500' :
+                    notification.type === 'error' ? 'text-red-500' : 'text-blue-500'
+                  }`}>
+                    {notification.type === 'success' ? <CheckCircle2 size={20} /> :
+                     notification.type === 'warning' ? <AlertCircle size={20} /> :
+                     notification.type === 'error' ? <AlertCircle size={20} /> : <Info size={20} />}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 dark:text-slate-100 truncate">{student.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-slate-400 truncate">{student.school} • {student.class}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-slate-300">
-                      {record?.boarding ? 'Embarcou' : 'Pendente'}
+                  <div>
+                    <p className={`font-bold text-sm ${!notification.read ? 'text-school-text dark:text-dark-text' : 'text-school-text/60 dark:text-dark-text/60'}`}>
+                      {notification.title}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-slate-400">{record?.boardingTime || '--:--'}</p>
+                    <p className="text-xs text-school-text/70 dark:text-dark-text/70 mt-0.5 line-clamp-2 leading-relaxed">
+                      {notification.message}
+                    </p>
                   </div>
                 </div>
-              );
-            })}
+              ))
+            ) : (
+              <div className="py-12 text-center text-school-text/40">
+                <Bell size={40} className="mx-auto mb-4 opacity-20" />
+                <p>Tudo tranquilo por aqui.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -160,14 +188,14 @@ export const Dashboard: React.FC = () => {
 };
 
 const StatCard = ({ title, value, subtitle, icon: Icon, color }: any) => (
-  <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg border border-gray-50 dark:border-slate-700 flex items-center gap-4 transition-transform hover:scale-105">
+  <div className="school-card p-6 flex items-center gap-4 transition-transform hover:scale-105">
     <div className={`p-4 rounded-2xl ${color}`}>
       <Icon size={28} />
     </div>
     <div>
-      <p className="text-gray-500 dark:text-slate-400 text-sm font-medium">{title}</p>
-      <h3 className="text-3xl font-bold text-gray-800 dark:text-slate-100">{value}</h3>
-      {subtitle && <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">{subtitle}</p>}
+      <p className="text-school-text/50 dark:text-dark-text/50 text-sm font-medium">{title}</p>
+      <h3 className="text-3xl font-bold text-school-text dark:text-dark-text">{value}</h3>
+      {subtitle && <p className="text-xs text-school-text/40 dark:text-dark-text/40 mt-1">{subtitle}</p>}
     </div>
   </div>
 );

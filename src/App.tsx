@@ -12,39 +12,40 @@ import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Admin } from './pages/Admin';
 
+import { SplashScreen } from './components/SplashScreen';
+
 const AppRoutes = () => {
   const { currentUser } = useAppContext();
 
-  if (!currentUser) {
-    return <Auth />;
-  }
-
-  if (!currentUser.role) {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<Profile />} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="students" element={<Students />} />
-          <Route path="routes" element={<RoutesPage />} />
-          <Route path="attendance" element={<Attendance />} />
-          <Route path="incidents" element={<Incidents />} />
-          <Route path="communication" element={<Communication />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="admin" element={<Admin />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <>
+      <SplashScreen />
+      {!currentUser ? (
+        <Auth />
+      ) : !currentUser.role ? (
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<Profile />} />
+          </Routes>
+        </BrowserRouter>
+      ) : (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="students" element={<Students />} />
+              <Route path="routes" element={<RoutesPage />} />
+              <Route path="attendance" element={<Attendance />} />
+              <Route path="incidents" element={<Incidents />} />
+              <Route path="communication" element={<Communication />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="admin" element={<Admin />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      )}
+    </>
   );
 };
 

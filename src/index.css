@@ -6,38 +6,41 @@
   --font-serif: "Inter", ui-serif, Georgia, serif;
   --font-cursive: "Caveat", cursive;
   
-  --color-school-blue: #1e293b;
-  --color-school-yellow: #6366f1;
-  --color-school-yellow-hover: #4f46e5;
-  --color-school-bg: #f8fafc;
+  /* Afro-centric Palette */
+  --color-school-bg: #F4EFE6;
+  --color-school-card: #FCFAF5;
+  --color-school-text: #251C17;
+  --color-school-sankofa: #D6A98C;
   
-  --color-dark-bg: #0f172a;
-  --color-dark-surface: #1e293b;
-  --color-dark-text: #f1f5f9;
-  --color-dark-text-muted: #94a3b8;
-  --color-dark-border: #334155;
+  --color-dark-bg: #251C17;
+  --color-dark-card: #332822;
+  --color-dark-text: #F4EFE6;
+  --color-dark-sankofa: #523F31;
+  
+  --color-accent-terracotta: #B35A38;
+  --color-accent-mustard: #D4A017;
+  --color-accent-brown: #5D2E1D;
+  
+  /* Legacy/Utility mappings */
+  --color-school-blue: #5D2E1D; /* Mapping old blue to deep brown */
+  --color-school-yellow: #D4A017; /* Mapping old yellow to mustard */
+  --color-school-yellow-hover: #B35A38; /* Mapping hover to terracotta */
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-school-bg);
-  color: #1e293b;
-  /* Professional Slate/Indigo background */
-  background: 
-    linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(30, 41, 59, 0.03) 100%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--color-dark-bg);
+  color: var(--color-dark-text);
   background-attachment: fixed;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html.dark body {
-  background-color: var(--color-dark-bg);
-  color: var(--color-dark-text);
-  /* Optimized dark mode background */
-  background: 
-    linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(15, 23, 42, 0.1) 100%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-attachment: fixed;
+/* Card Styles */
+.school-card {
+  background-color: var(--color-dark-card);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(82, 63, 49, 0.3);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -57,15 +60,9 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #475569;
   border-radius: 4px;
 }
-html.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
-}
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-html.dark ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }

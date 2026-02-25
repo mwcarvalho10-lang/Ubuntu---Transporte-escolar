@@ -36,12 +36,12 @@ export const RoutesPage: React.FC = () => {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-school-blue dark:text-school-yellow font-serif">Rotas</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-2 text-base sm:text-lg">Gerencie as rotas e veículos</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-school-text dark:text-dark-text font-serif">Rotas</h1>
+          <p className="text-school-text/60 dark:text-dark-text/60 mt-2 text-base sm:text-lg">Gerencie as rotas e veículos</p>
         </div>
         <button 
           onClick={() => { setEditingRoute(null); setIsModalOpen(true); }}
-          className="w-full sm:w-auto bg-school-yellow hover:bg-school-yellow-hover text-school-blue px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-colors"
+          className="w-full sm:w-auto bg-accent-mustard hover:bg-accent-terracotta text-accent-brown hover:text-white px-6 py-3 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-all"
         >
           <Plus size={20} />
           Nova Rota
@@ -52,11 +52,11 @@ export const RoutesPage: React.FC = () => {
         {routes.map(route => {
           const routeStudentsCount = students.filter(s => s.routeId === route.id).length;
           return (
-            <div key={route.id} className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-slate-700 hover:shadow-2xl transition-shadow relative overflow-hidden group">
+            <div key={route.id} className="school-card p-6 hover:shadow-2xl transition-shadow relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                 <button 
                   onClick={() => { setEditingRoute(route); setIsModalOpen(true); }}
-                  className="p-2 bg-white/90 dark:bg-slate-700/90 backdrop-blur text-school-blue dark:text-school-yellow hover:bg-school-yellow dark:hover:bg-slate-600 rounded-xl shadow-sm transition-colors"
+                  className="p-2 bg-school-bg/90 dark:bg-dark-bg/90 backdrop-blur text-accent-terracotta dark:text-accent-mustard hover:bg-accent-mustard dark:hover:bg-accent-terracotta rounded-xl shadow-sm transition-colors"
                 >
                   <Edit2 size={16} />
                 </button>
@@ -66,32 +66,32 @@ export const RoutesPage: React.FC = () => {
                       deleteRoute(route.id);
                     }
                   }}
-                  className="p-2 bg-white/90 dark:bg-slate-700/90 backdrop-blur text-red-500 hover:bg-red-50 dark:hover:bg-slate-600 rounded-xl shadow-sm transition-colors"
+                  className="p-2 bg-school-bg/90 dark:bg-dark-bg/90 backdrop-blur text-red-500 hover:bg-red-50 rounded-xl shadow-sm transition-colors"
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-blue-50 dark:bg-slate-700 text-school-blue dark:text-school-yellow rounded-2xl flex items-center justify-center">
+                <div className="w-14 h-14 bg-accent-mustard/10 text-accent-terracotta dark:text-accent-mustard rounded-2xl flex items-center justify-center">
                   <Bus size={28} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 font-serif">{route.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{routeStudentsCount} alunos</p>
+                  <h3 className="text-xl font-bold text-school-text dark:text-dark-text font-serif">{route.name}</h3>
+                  <p className="text-sm text-school-text/60 dark:text-dark-text/60 font-medium">{routeStudentsCount} alunos</p>
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+              <div className="space-y-4 pt-4 border-t border-school-sankofa/10 dark:border-dark-sankofa/10">
                 <div className="flex justify-between items-center">
                   <div>
-                    <span className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider font-semibold block">Motorista</span>
-                    <span className="font-medium text-gray-900 dark:text-slate-200">{route.driver}</span>
+                    <span className="text-xs text-school-text/40 dark:text-dark-text/40 uppercase tracking-wider font-semibold block">Motorista</span>
+                    <span className="font-medium text-school-text dark:text-dark-text">{route.driver}</span>
                   </div>
                   {route.driverPhone && (
                     <button 
                       onClick={() => handleWhatsApp(route.driverPhone)}
-                      className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-school-blue hover:text-white dark:hover:bg-school-yellow dark:hover:text-school-blue rounded-xl transition-colors"
+                      className="p-2 bg-accent-mustard/10 text-accent-terracotta dark:text-accent-mustard hover:bg-accent-terracotta hover:text-white rounded-xl transition-colors"
                       title="WhatsApp Motorista"
                     >
                       <MessageCircle size={18} />
@@ -100,13 +100,13 @@ export const RoutesPage: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <span className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider font-semibold block">Monitor(a)</span>
-                    <span className="font-medium text-gray-900 dark:text-slate-200">{route.monitorName || 'Não cadastrado'}</span>
+                    <span className="text-xs text-school-text/40 dark:text-dark-text/40 uppercase tracking-wider font-semibold block">Monitor(a)</span>
+                    <span className="font-medium text-school-text dark:text-dark-text">{route.monitorName || 'Não cadastrado'}</span>
                   </div>
                   {route.monitorPhone && (
                     <button 
                       onClick={() => handleWhatsApp(route.monitorPhone)}
-                      className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-school-blue hover:text-white dark:hover:bg-school-yellow dark:hover:text-school-blue rounded-xl transition-colors"
+                      className="p-2 bg-accent-mustard/10 text-accent-terracotta dark:text-accent-mustard hover:bg-accent-terracotta hover:text-white rounded-xl transition-colors"
                       title="WhatsApp Monitor"
                     >
                       <MessageCircle size={18} />
@@ -118,7 +118,7 @@ export const RoutesPage: React.FC = () => {
           );
         })}
         {routes.length === 0 && (
-          <div className="col-span-full p-12 text-center text-gray-500 dark:text-slate-400 bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-gray-300 dark:border-slate-600">
+          <div className="col-span-full p-12 text-center text-school-text/40 school-card border-dashed border-school-sankofa/30">
             Nenhuma rota cadastrada.
           </div>
         )}
@@ -126,51 +126,51 @@ export const RoutesPage: React.FC = () => {
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-accent-brown/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="school-card w-full max-w-md animate-in zoom-in-95 duration-200">
             <div className="p-8">
-              <h2 className="text-3xl font-bold text-school-blue dark:text-school-yellow mb-6 font-serif">
+              <h2 className="text-3xl font-bold text-accent-brown dark:text-accent-mustard mb-6 font-serif">
                 {editingRoute ? 'Editar Rota' : 'Nova Rota'}
               </h2>
               <form onSubmit={handleSave} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Nome da Rota</label>
-                  <input name="name" defaultValue={editingRoute?.name} required placeholder="Ex: Rota Pelourinho" className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
+                  <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Nome da Rota</label>
+                  <input name="name" defaultValue={editingRoute?.name} required placeholder="Ex: Rota Pelourinho" className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Motorista</label>
-                    <input name="driver" defaultValue={editingRoute?.driver} required className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
+                    <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Motorista</label>
+                    <input name="driver" defaultValue={editingRoute?.driver} required className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Tel. Motorista</label>
-                    <input name="driverPhone" defaultValue={editingRoute?.driverPhone} required placeholder="(00) 00000-0000" className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
+                    <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Tel. Motorista</label>
+                    <input name="driverPhone" defaultValue={editingRoute?.driverPhone} required placeholder="(00) 00000-0000" className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Monitor(a)</label>
-                    <input name="monitorName" defaultValue={editingRoute?.monitorName} required className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
+                    <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Monitor(a)</label>
+                    <input name="monitorName" defaultValue={editingRoute?.monitorName} required className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Tel. Monitor</label>
-                    <input name="monitorPhone" defaultValue={editingRoute?.monitorPhone} required placeholder="(00) 00000-0000" className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:border-school-blue dark:focus:border-school-yellow focus:ring-school-blue dark:focus:ring-school-yellow" />
+                    <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Tel. Monitor</label>
+                    <input name="monitorPhone" defaultValue={editingRoute?.monitorPhone} required placeholder="(00) 00000-0000" className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-4 pt-6 border-t border-gray-100 dark:border-slate-700">
+                <div className="flex justify-end gap-4 pt-6 border-t border-school-sankofa/10 dark:border-dark-sankofa/10">
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)}
-                    className="px-6 py-3 rounded-xl font-medium text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    className="px-6 py-3 rounded-xl font-medium text-school-text/60 dark:text-dark-text/60 hover:bg-school-bg dark:hover:bg-dark-bg transition-colors"
                   >
                     Cancelar
                   </button>
                   <button 
                     type="submit"
-                    className="px-6 py-3 rounded-xl font-medium bg-school-blue text-white hover:bg-school-blue/90 transition-colors shadow-md"
+                    className="px-6 py-3 rounded-xl font-medium bg-accent-mustard text-accent-brown hover:bg-accent-terracotta hover:text-white transition-all shadow-md"
                   >
                     Salvar Rota
                   </button>
