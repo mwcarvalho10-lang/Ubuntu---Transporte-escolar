@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Menu, X, Shield, Bell, Trash, Info, AlertCircle, CheckCircle, Settings, Clock } from 'lucide-react';
+import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Menu, X, Shield, Bell, Trash, Info, AlertCircle, CheckCircle, Settings, Clock, Download } from 'lucide-react';
 import { useAppContext, Notification } from '../store';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -22,6 +22,8 @@ export const Layout: React.FC = () => {
   const { students, currentUser, logout, notifications, markNotificationAsRead, clearNotifications, isMonitorAccessAllowed } = useAppContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +44,30 @@ export const Layout: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBtn(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setShowInstallBtn(false);
+    }
+    setDeferredPrompt(null);
+  };
 
   const filteredNavItems = navItems.filter(item => {
     if (item.to === '/admin') return currentUser?.role === 'admin';
@@ -137,6 +163,16 @@ export const Layout: React.FC = () => {
                 </Link>
               );
             })}
+
+            {showInstallBtn && (
+              <button
+                onClick={handleInstallClick}
+                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-accent-mustard hover:bg-white/10 mt-4 border border-accent-mustard/30"
+              >
+                <Download size={20} />
+                <span className="text-sm font-bold">Instalar App</span>
+              </button>
+            )}
           </nav>
 
           <div className="p-4 border-t border-white/10 bg-black/20">
