@@ -27,11 +27,13 @@ export const Reports: React.FC = () => {
     let startDate = new Date(0);
     if (dateRange === '7days') startDate = subDays(today, 7);
     if (dateRange === '30days') startDate = subDays(today, 30);
+    
+    const startDateString = format(startDate, 'yyyy-MM-dd');
 
     const report = filteredStudents.map(student => {
       const studentAttendance = attendance.filter(a => 
         a.studentId === student.id && 
-        new Date(a.date) >= startDate
+        a.date >= startDateString
       );
       
       const totalDays = studentAttendance.length;

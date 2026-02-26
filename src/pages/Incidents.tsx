@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../store';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AlertCircle, Plus, Filter, Trash2 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export const Incidents: React.FC = () => {
       const typeMatch = filterType === 'all' || incident.type === filterType;
       const severityMatch = filterSeverity === 'all' || incident.severity === filterSeverity;
       return routeMatch && typeMatch && severityMatch;
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }).sort((a, b) => b.date.localeCompare(a.date));
   }, [incidents, students, filterRoute, filterType, filterSeverity]);
 
   const handleSave = (e: React.FormEvent) => {
@@ -148,7 +148,7 @@ export const Incidents: React.FC = () => {
                     </div>
                     <div className="text-left sm:text-right">
                       <span className="text-sm font-semibold text-school-text dark:text-dark-text block">
-                        {format(new Date(incident.date), "dd 'de' MMMM", { locale: ptBR })}
+                        {format(parseISO(incident.date), "dd 'de' MMMM", { locale: ptBR })}
                       </span>
                       <div className="flex gap-2 justify-start sm:justify-end mt-1">
                         <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md inline-block ${
