@@ -219,7 +219,16 @@ export const Reports: React.FC = () => {
             <tbody className="divide-y divide-school-sankofa/10 dark:divide-dark-sankofa/10 print:divide-gray-300">
               {filteredData.map(student => (
                 <tr key={student.id} className="hover:bg-accent-mustard/5 transition-colors">
-                  <td className="p-4 font-semibold text-school-text dark:text-dark-text print:text-black">{student.name}</td>
+                  <td className="p-4 font-semibold text-school-text dark:text-dark-text print:text-black">
+                    <div className="flex items-center gap-2">
+                      {student.name}
+                      {!student.active && (
+                        <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 print:hidden">
+                          Inativo
+                        </span>
+                      )}
+                    </div>
+                  </td>
                   <td className="p-4">
                     <p className="text-school-text dark:text-dark-text print:text-black">{student.school}</p>
                     <p className="text-sm text-school-text/60 dark:text-dark-text/60 print:text-gray-600">{student.class}</p>

@@ -19,7 +19,7 @@ export const Incidents: React.FC = () => {
 
   const filteredStudents = useMemo(() => {
     if (!selectedRoute) return [];
-    return students.filter(s => s.routeId === selectedRoute);
+    return students.filter(s => s.routeId === selectedRoute && s.active);
   }, [students, selectedRoute]);
 
   const filteredIncidents = useMemo(() => {

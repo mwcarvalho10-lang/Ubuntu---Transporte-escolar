@@ -13,6 +13,7 @@ export const Students: React.FC = () => {
   const [routeFilter, setRouteFilter] = useState(() => {
     return localStorage.getItem('school_students_route_filter') || 'all';
   });
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [historyStudent, setHistoryStudent] = useState<Student | null>(null);
@@ -36,14 +37,15 @@ export const Students: React.FC = () => {
       s.id === search; // Match exact ID from global search
     
     const matchesRoute = routeFilter === 'all' || s.routeId === routeFilter;
+    const matchesStatus = statusFilter === 'all' || (statusFilter === 'active' ? s.active : !s.active);
     
-    return matchesSearch && matchesRoute;
+    return matchesSearch && matchesRoute && matchesStatus;
   });
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const studentData: Omit<Student, 'id'> = {
+    const studentData: Omit<Student, 'id' | 'active'> = {
       name: formData.get('name') as string,
       address: formData.get('address') as string,
       class: formData.get('class') as string,
@@ -56,7 +58,7 @@ export const Students: React.FC = () => {
     };
 
     if (editingStudent) {
-      updateStudent(editingStudent.id, studentData);
+      updateStudent(editingStudent.id, { ...studentData, active: formData.get('active') === 'on' });
     } else {
       addStudent(studentData);
     }
@@ -107,6 +109,17 @@ export const Students: React.FC = () => {
               ))}
             </select>
           </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+              className="w-full sm:w-40 px-4 py-3 rounded-2xl border-2 border-school-sankofa/20 bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text shadow-sm focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/20 font-medium transition-all appearance-none cursor-pointer"
+            >
+              <option value="active" className="bg-school-bg dark:bg-dark-bg">Ativos</option>
+              <option value="inactive" className="bg-school-bg dark:bg-dark-bg">Inativos</option>
+              <option value="all" className="bg-school-bg dark:bg-dark-bg">Todos</option>
+            </select>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -127,7 +140,14 @@ export const Students: React.FC = () => {
                   <tr key={student.id} className="hover:bg-accent-mustard/5 transition-colors">
                     <td className="p-4">
                       <div>
-                        <p className="font-semibold text-school-text dark:text-dark-text">{student.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-school-text dark:text-dark-text">{student.name}</p>
+                          {!student.active && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">
+                              Inativo
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-school-text/60 dark:text-dark-text/60 truncate max-w-[200px]">{student.address}</p>
                       </div>
                     </td>
@@ -267,6 +287,21 @@ export const Students: React.FC = () => {
                     <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Contato 2 - Telefone</label>
                     <input name="contact2Phone" defaultValue={editingStudent?.contact2Phone} required placeholder="(00) 00000-0000" className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard" />
                   </div>
+                  
+                  {editingStudent && (
+                    <div className="md:col-span-2 flex items-center gap-3 p-4 bg-school-bg/30 dark:bg-dark-bg/30 rounded-xl border border-school-sankofa/10">
+                      <input 
+                        type="checkbox" 
+                        name="active" 
+                        id="active" 
+                        defaultChecked={editingStudent.active}
+                        className="w-5 h-5 rounded border-school-sankofa/20 text-accent-mustard focus:ring-accent-mustard"
+                      />
+                      <label htmlFor="active" className="text-sm font-bold text-school-text dark:text-dark-text cursor-pointer">
+                        Aluno Ativo (aparece nas listas de presença e rotas)
+                      </label>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-end gap-4 pt-6 border-t border-school-sankofa/10 dark:border-dark-sankofa/10">

@@ -50,7 +50,7 @@ export const RoutesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {routes.map(route => {
-          const routeStudentsCount = students.filter(s => s.routeId === route.id).length;
+          const routeStudentsCount = students.filter(s => s.routeId === route.id && s.active).length;
           return (
             <div key={route.id} className="school-card p-6 hover:shadow-2xl transition-shadow relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">

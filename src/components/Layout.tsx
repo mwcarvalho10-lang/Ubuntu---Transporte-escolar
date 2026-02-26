@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Search, Menu, X, Shield, Bell, Trash, Info, AlertCircle, CheckCircle, Settings, Clock } from 'lucide-react';
+import { LayoutDashboard, Users, Bus, CheckSquare, MessageSquare, FileText, AlertTriangle, Menu, X, Shield, Bell, Trash, Info, AlertCircle, CheckCircle, Settings, Clock } from 'lucide-react';
 import { useAppContext, Notification } from '../store';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -20,8 +20,6 @@ const navItems = [
 
 export const Layout: React.FC = () => {
   const { students, currentUser, logout, notifications, markNotificationAsRead, clearNotifications, isMonitorAccessAllowed } = useAppContext();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearchResults, setShowSearchResults] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -44,18 +42,6 @@ export const Layout: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const searchResults = students.filter(s => 
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.contact1Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.contact2Name.toLowerCase().includes(searchQuery.toLowerCase())
-  ).slice(0, 5);
-
-  const handleSearchSelect = (studentId: string) => {
-    setSearchQuery('');
-    setShowSearchResults(false);
-    navigate(`/students?search=${studentId}`);
-  };
 
   const filteredNavItems = navItems.filter(item => {
     if (item.to === '/admin') return currentUser?.role === 'admin';
@@ -188,42 +174,6 @@ export const Layout: React.FC = () => {
             >
               <Menu size={24} />
             </button>
-            
-            <div className="relative flex-1 max-w-md">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search size={18} className="text-white/40" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowSearchResults(e.target.value.length > 0);
-                }}
-                placeholder="Pesquisar..."
-                className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all backdrop-blur-md text-sm sm:text-base"
-              />
-              
-              {showSearchResults && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-dark-card border border-dark-sankofa/30 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
-                  {searchResults.map((student) => (
-                    <button
-                      key={student.id}
-                      onClick={() => handleSearchSelect(student.id)}
-                      className="w-full px-4 py-3 text-left hover:bg-accent-mustard/10 flex items-center gap-3 border-b border-dark-sankofa/10 last:border-0 transition-colors"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-accent-mustard/20 flex items-center justify-center text-accent-mustard font-bold">
-                        {student.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-dark-text">{student.name}</p>
-                        <p className="text-xs text-dark-text/50">{student.class} • {student.school}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">

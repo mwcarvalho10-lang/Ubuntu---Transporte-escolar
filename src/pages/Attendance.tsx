@@ -52,8 +52,9 @@ export const Attendance: React.FC = () => {
   };
 
   const filteredStudents = useMemo(() => {
-    if (unlockedRouteId === 'all') return students;
-    if (unlockedRouteId) return students.filter(s => s.routeId === unlockedRouteId);
+    const activeStudents = students.filter(s => s.active);
+    if (unlockedRouteId === 'all') return activeStudents;
+    if (unlockedRouteId) return activeStudents.filter(s => s.routeId === unlockedRouteId);
     return [];
   }, [students, unlockedRouteId]);
 

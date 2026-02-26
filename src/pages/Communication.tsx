@@ -7,8 +7,9 @@ export const Communication: React.FC = () => {
   const [selectedRoute, setSelectedRoute] = useState<string>('all');
 
   const filteredStudents = useMemo(() => {
-    if (selectedRoute === 'all') return students;
-    return students.filter(s => s.routeId === selectedRoute);
+    const activeStudents = students.filter(s => s.active);
+    if (selectedRoute === 'all') return activeStudents;
+    return activeStudents.filter(s => s.routeId === selectedRoute);
   }, [students, selectedRoute]);
 
   return (

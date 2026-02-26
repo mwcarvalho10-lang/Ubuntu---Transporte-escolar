@@ -34,6 +34,7 @@ export type Student = {
   contact2Name: string;
   contact2Phone: string;
   createdAt?: string;
+  active: boolean;
 };
 
 export type AttendanceRecord = {
@@ -156,6 +157,7 @@ const initialStudents: Student[] = [
     contact1Phone: '(71) 99999-1111',
     contact2Name: 'Avó (Lúcia)',
     contact2Phone: '(71) 98888-2222',
+    active: true,
   },
   {
     id: 's2',
@@ -168,6 +170,7 @@ const initialStudents: Student[] = [
     contact1Phone: '(71) 97777-3333',
     contact2Name: 'Tio (Marcos)',
     contact2Phone: '(71) 96666-4444',
+    active: true,
   },
   {
     id: 's3',
@@ -180,6 +183,7 @@ const initialStudents: Student[] = [
     contact1Phone: '(71) 95555-5555',
     contact2Name: 'Irmão (Pedro)',
     contact2Phone: '(71) 94444-6666',
+    active: true,
   },
 ];
 
@@ -346,8 +350,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStudents(students.map(s => s.routeId === id ? { ...s, routeId: '' } : s));
   };
 
-  const addStudent = (student: Omit<Student, 'id' | 'createdAt'>) => {
-    const newStudent = { ...student, id: Math.random().toString(36).substr(2, 9), createdAt: new Date().toISOString() };
+  const addStudent = (student: Omit<Student, 'id' | 'createdAt' | 'active'>) => {
+    const newStudent = { ...student, id: Math.random().toString(36).substr(2, 9), createdAt: new Date().toISOString(), active: true };
     setStudents([...students, newStudent]);
     addNotification({
       title: 'Novo Aluno Cadastrado',
