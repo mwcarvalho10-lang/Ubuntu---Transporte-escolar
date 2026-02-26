@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useAppContext, Notification } from '../store';
 import { format, isWithinInterval, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Users, Bus, CheckCircle, AlertCircle, Bell, X, Calendar, Info, CheckCircle2 } from 'lucide-react';
+import { Users, Bus, CheckCircle, AlertCircle, Bell, X, Calendar, Info, CheckCircle2, Clock, Sun, CloudSun, CloudFog, CloudDrizzle, CloudRain, CloudSnow, CloudLightning } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
@@ -89,8 +89,11 @@ export const Dashboard: React.FC = () => {
             Visão geral de hoje, {format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
         </div>
-        <div className="bg-accent-mustard text-accent-brown px-6 py-2 rounded-full font-semibold shadow-md text-sm sm:text-base">
-          Sincronizado
+        <div className="flex items-center gap-4">
+          <ClockWeatherWidget />
+          <div className="bg-accent-mustard text-accent-brown px-6 py-2 rounded-full font-semibold shadow-md text-sm sm:text-base">
+            Sincronizado
+          </div>
         </div>
       </header>
 
@@ -200,3 +203,67 @@ const StatCard = ({ title, value, subtitle, icon: Icon, color }: any) => (
     </div>
   </div>
 );
+
+const ClockWeatherWidget = () => {
+  const [time, setTime] = useState(new Date());
+  const [weather, setWeather] = useState<{ temp: number; code: number } | null>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const fetchWeather = async (lat: number, lon: number) => {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await res.json();
+        if (data.current_weather) {
+          setWeather({
+            temp: Math.round(data.current_weather.temperature),
+            code: data.current_weather.weathercode
+          });
+        }
+      } catch (e) {
+        console.error('Failed to fetch weather', e);
+      }
+    };
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => fetchWeather(position.coords.latitude, position.coords.longitude),
+        () => fetchWeather(-12.9714, -38.5014) // Default to Salvador
+      );
+    } else {
+      fetchWeather(-12.9714, -38.5014);
+    }
+  }, []);
+
+  const getWeatherIcon = (code: number) => {
+    if (code === 0) return <Sun size={18} className="text-orange-500" />;
+    if (code <= 3) return <CloudSun size={18} className="text-school-text/60 dark:text-dark-text/60" />;
+    if (code <= 48) return <CloudFog size={18} className="text-school-text/60 dark:text-dark-text/60" />;
+    if (code <= 55) return <CloudDrizzle size={18} className="text-blue-400" />;
+    if (code <= 65) return <CloudRain size={18} className="text-blue-500" />;
+    if (code <= 75) return <CloudSnow size={18} className="text-blue-200" />;
+    return <CloudLightning size={18} className="text-yellow-500" />;
+  };
+
+  return (
+    <div className="flex items-center gap-3 bg-school-bg/50 dark:bg-dark-bg/50 px-4 py-2 rounded-2xl border border-school-sankofa/10 dark:border-dark-sankofa/10 shadow-sm backdrop-blur-sm">
+      <div className="flex items-center gap-2 text-school-text dark:text-dark-text font-mono font-medium">
+        <Clock size={16} className="text-accent-terracotta dark:text-accent-mustard" />
+        <span>{format(time, 'HH:mm')}</span>
+      </div>
+      {weather && (
+        <>
+          <div className="w-px h-4 bg-school-sankofa/20 dark:bg-dark-sankofa/20"></div>
+          <div className="flex items-center gap-2 text-school-text dark:text-dark-text font-medium">
+            {getWeatherIcon(weather.code)}
+            <span>{weather.temp}°C</span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};

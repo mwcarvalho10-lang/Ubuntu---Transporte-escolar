@@ -233,35 +233,35 @@ export const Students: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Turma</label>
                     <select name="class" defaultValue={editingStudent?.class} required className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard">
-                      <option value="">Selecione a turma</option>
-                      <option value="1º Ano A (Manhã)">1º Ano A (Manhã)</option>
-                      <option value="1º Ano B (Manhã)">1º Ano B (Manhã)</option>
-                      <option value="1º Ano C (Tarde)">1º Ano C (Tarde)</option>
-                      <option value="1º Ano D (Tarde)">1º Ano D (Tarde)</option>
-                      <option value="2º Ano A (Manhã)">2º Ano A (Manhã)</option>
-                      <option value="2º Ano B (Manhã)">2º Ano B (Manhã)</option>
-                      <option value="2º Ano C (Tarde)">2º Ano C (Tarde)</option>
-                      <option value="2º Ano D (Tarde)">2º Ano D (Tarde)</option>
-                      <option value="3º Ano A (Manhã)">3º Ano A (Manhã)</option>
-                      <option value="3º Ano B (Manhã)">3º Ano B (Manhã)</option>
-                      <option value="3º Ano C (Tarde)">3º Ano C (Tarde)</option>
-                      <option value="3º Ano D (Tarde)">3º Ano D (Tarde)</option>
-                      <option value="4º Ano A (Manhã)">4º Ano A (Manhã)</option>
-                      <option value="4º Ano B (Manhã)">4º Ano B (Manhã)</option>
-                      <option value="4º Ano C (Tarde)">4º Ano C (Tarde)</option>
-                      <option value="4º Ano D (Tarde)">4º Ano D (Tarde)</option>
-                      <option value="5º Ano A (Manhã)">5º Ano A (Manhã)</option>
-                      <option value="5º Ano B (Manhã)">5º Ano B (Manhã)</option>
-                      <option value="5º Ano C (Tarde)">5º Ano C (Tarde)</option>
-                      <option value="5º Ano D (Tarde)">5º Ano D (Tarde)</option>
+                      <option value="" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Selecione a turma</option>
+                      <option value="1º Ano A (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">1º Ano A (Manhã)</option>
+                      <option value="1º Ano B (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">1º Ano B (Manhã)</option>
+                      <option value="1º Ano C (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">1º Ano C (Tarde)</option>
+                      <option value="1º Ano D (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">1º Ano D (Tarde)</option>
+                      <option value="2º Ano A (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">2º Ano A (Manhã)</option>
+                      <option value="2º Ano B (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">2º Ano B (Manhã)</option>
+                      <option value="2º Ano C (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">2º Ano C (Tarde)</option>
+                      <option value="2º Ano D (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">2º Ano D (Tarde)</option>
+                      <option value="3º Ano A (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">3º Ano A (Manhã)</option>
+                      <option value="3º Ano B (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">3º Ano B (Manhã)</option>
+                      <option value="3º Ano C (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">3º Ano C (Tarde)</option>
+                      <option value="3º Ano D (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">3º Ano D (Tarde)</option>
+                      <option value="4º Ano A (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">4º Ano A (Manhã)</option>
+                      <option value="4º Ano B (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">4º Ano B (Manhã)</option>
+                      <option value="4º Ano C (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">4º Ano C (Tarde)</option>
+                      <option value="4º Ano D (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">4º Ano D (Tarde)</option>
+                      <option value="5º Ano A (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">5º Ano A (Manhã)</option>
+                      <option value="5º Ano B (Manhã)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">5º Ano B (Manhã)</option>
+                      <option value="5º Ano C (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">5º Ano C (Tarde)</option>
+                      <option value="5º Ano D (Tarde)" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">5º Ano D (Tarde)</option>
                     </select>
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">Rota</label>
                     <select name="routeId" defaultValue={editingStudent?.routeId} required className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard">
-                      <option value="">Selecione uma rota</option>
+                      <option value="" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Selecione uma rota</option>
                       {routes.map(r => (
-                        <option key={r.id} value={r.id}>{r.name}</option>
+                        <option key={r.id} value={r.id} className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">{r.name}</option>
                       ))}
                     </select>
                   </div>

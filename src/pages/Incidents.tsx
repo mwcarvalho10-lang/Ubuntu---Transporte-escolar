@@ -203,9 +203,9 @@ export const Incidents: React.FC = () => {
                     required
                     className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard"
                   >
-                    <option value="">Selecione a rota...</option>
+                    <option value="" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Selecione a rota...</option>
                     {routes.map(r => (
-                      <option key={r.id} value={r.id}>{r.name}</option>
+                      <option key={r.id} value={r.id} className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">{r.name}</option>
                     ))}
                   </select>
                 </div>
@@ -219,9 +219,9 @@ export const Incidents: React.FC = () => {
                     disabled={!selectedRoute}
                     className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard disabled:opacity-50"
                   >
-                    <option value="">Selecione o aluno...</option>
+                    <option value="" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Selecione o aluno...</option>
                     {filteredStudents.map(s => (
-                      <option key={s.id} value={s.id}>{s.name}</option>
+                      <option key={s.id} value={s.id} className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">{s.name}</option>
                     ))}
                   </select>
                 </div>
@@ -256,7 +256,7 @@ export const Incidents: React.FC = () => {
                       onClick={() => setIncidentType('other')}
                       className={`py-2 px-3 rounded-xl border font-medium text-sm transition-colors ${
                         incidentType === 'other' 
-                          ? 'bg-accent-mustard/10 border-accent-mustard/30 text-accent-brown' 
+                          ? 'bg-accent-mustard/10 border-accent-mustard/30 text-accent-brown dark:text-accent-mustard' 
                           : 'bg-school-bg/50 dark:bg-dark-bg/50 border-school-sankofa/20 text-school-text/60 dark:text-dark-text/60 hover:bg-accent-mustard/10'
                       }`}
                     >
