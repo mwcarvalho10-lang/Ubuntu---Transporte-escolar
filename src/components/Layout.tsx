@@ -15,6 +15,7 @@ const navItems = [
   { to: '/incidents', icon: AlertTriangle, label: 'Ocorrências' },
   { to: '/communication', icon: MessageSquare, label: 'Comunicação' },
   { to: '/reports', icon: FileText, label: 'Relatórios' },
+  { to: '/admin', icon: Shield, label: 'Administração' },
 ];
 
 export const Layout: React.FC = () => {
@@ -57,6 +58,7 @@ export const Layout: React.FC = () => {
   };
 
   const filteredNavItems = navItems.filter(item => {
+    if (item.to === '/admin') return currentUser?.role === 'admin';
     if (currentUser?.role === 'admin' || currentUser?.role === 'manager') return true;
     if (currentUser?.role === 'monitor') {
       return ['/attendance', '/incidents'].includes(item.to);

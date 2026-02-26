@@ -150,10 +150,10 @@ export const Admin: React.FC = () => {
                         <button
                           onClick={() => handleDeleteUser(user.id, user.name)}
                           disabled={user.id === currentUser?.id}
-                          className="p-2 text-school-text/30 hover:text-accent-terracotta disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                          className="p-2.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl disabled:opacity-10 disabled:cursor-not-allowed transition-all shadow-sm"
                           title="Excluir Usuário"
                         >
-                          <Trash2 size={20} />
+                          <Trash2 size={18} />
                         </button>
                       </td>
                     </tr>
