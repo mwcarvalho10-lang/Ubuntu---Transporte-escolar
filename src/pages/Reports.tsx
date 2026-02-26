@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../store';
 import { format, parseISO, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Download, FileText, Filter, Calendar } from 'lucide-react';
+import { Download, FileText, Filter, Calendar, Bus } from 'lucide-react';
 
 export const Reports: React.FC = () => {
   const { students, attendance } = useAppContext();
@@ -115,13 +115,28 @@ export const Reports: React.FC = () => {
       {/* Print Only Header */}
       <div className="print-only mb-8 border-b-4 border-accent-mustard pb-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-accent-brown font-serif">Ubuntu Escolar</h1>
-            <p className="text-accent-terracotta font-bold uppercase tracking-widest text-sm">Gestão de Transporte</p>
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-accent-mustard rounded-xl text-accent-brown">
+              <Bus size={32} />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-accent-brown font-serif tracking-tight">Ubuntu Escolar</h1>
+              <p className="text-accent-terracotta font-bold uppercase tracking-widest text-xs">Gestão Inteligente de Transporte</p>
+            </div>
           </div>
           <div className="text-right">
-            <p className="text-sm font-bold">Relatório Oficial de Frequência</p>
-            <p className="text-xs opacity-60">{format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
+            <p className="text-lg font-bold text-accent-brown">Documento de Registro Oficial</p>
+            <p className="text-sm text-accent-terracotta font-medium">Relatório de Frequência de Alunos</p>
+          </div>
+        </div>
+        <div className="mt-6 flex justify-between items-end text-sm border-t border-accent-mustard/20 pt-4">
+          <div>
+            <p className="font-bold">Emitido por:</p>
+            <p className="opacity-70">Sistema Ubuntu Escolar</p>
+          </div>
+          <div className="text-right">
+            <p className="font-bold">Local e Data:</p>
+            <p className="opacity-70">Salvador, BA - {format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
           </div>
         </div>
       </div>

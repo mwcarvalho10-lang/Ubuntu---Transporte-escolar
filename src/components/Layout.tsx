@@ -189,7 +189,7 @@ export const Layout: React.FC = () => {
               <Menu size={24} />
             </button>
             
-            <div className="relative max-w-md w-full hidden sm:block">
+            <div className="relative flex-1 max-w-md">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search size={18} className="text-white/40" />
               </div>
@@ -200,8 +200,8 @@ export const Layout: React.FC = () => {
                   setSearchQuery(e.target.value);
                   setShowSearchResults(e.target.value.length > 0);
                 }}
-                placeholder="Pesquisar alunos ou contatos..."
-                className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all backdrop-blur-md"
+                placeholder="Pesquisar..."
+                className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all backdrop-blur-md text-sm sm:text-base"
               />
               
               {showSearchResults && searchResults.length > 0 && (

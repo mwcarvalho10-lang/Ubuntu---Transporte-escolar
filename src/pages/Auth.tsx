@@ -228,11 +228,11 @@ export const Auth: React.FC = () => {
                   onChange={(e) => setSecurityQuestion(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard transition-colors outline-none text-sm"
                 >
-                  <option value="">Selecione uma pergunta...</option>
-                  <option value="Qual o nome do seu primeiro animal de estimação?">Qual o nome do seu primeiro animal de estimação?</option>
-                  <option value="Qual a cidade onde você nasceu?">Qual a cidade onde você nasceu?</option>
-                  <option value="Qual o nome da sua primeira escola?">Qual o nome da sua primeira escola?</option>
-                  <option value="Qual a sua comida favorita?">Qual a sua comida favorita?</option>
+                  <option value="" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Selecione uma pergunta...</option>
+                  <option value="Qual o nome do seu primeiro animal de estimação?" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Qual o nome do seu primeiro animal de estimação?</option>
+                  <option value="Qual a cidade onde você nasceu?" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Qual a cidade onde você nasceu?</option>
+                  <option value="Qual o nome da sua primeira escola?" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Qual o nome da sua primeira escola?</option>
+                  <option value="Qual a sua comida favorita?" className="bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text">Qual a sua comida favorita?</option>
                 </select>
                 <input 
                   type="text" 

@@ -93,6 +93,31 @@ export const Dashboard: React.FC = () => {
         </div>
       </header>
 
+      {/* Quick Search Bar */}
+      <div className="sticky top-0 z-20 pb-4 -mt-4 bg-transparent backdrop-blur-sm pt-4">
+        <div className="relative max-w-2xl mx-auto">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Users size={20} className="text-accent-terracotta" />
+          </div>
+          <input
+            type="text"
+            placeholder="Pesquisa rápida: Digite o nome do aluno ou contato..."
+            className="w-full pl-12 pr-4 py-4 bg-school-card dark:bg-dark-card border-2 border-school-sankofa/20 rounded-2xl text-school-text dark:text-dark-text shadow-xl focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/10 transition-all outline-none text-lg font-medium"
+            onChange={(e) => {
+              // This can trigger a global search or navigate to students with filter
+              if (e.target.value.length > 2) {
+                navigate(`/students?search=${e.target.value}`);
+              }
+            }}
+          />
+          <div className="absolute inset-y-0 right-4 flex items-center">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-school-text/30 dark:text-dark-text/30 bg-school-bg/50 dark:bg-dark-bg/50 px-2 py-1 rounded-md border border-school-sankofa/10">
+              Pressione Enter
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <StatCard 
           title="Total de Alunos" 
