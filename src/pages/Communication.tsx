@@ -19,18 +19,18 @@ export const Communication: React.FC = () => {
           <p className="text-school-text/60 dark:text-dark-text/60 mt-2 text-base sm:text-lg">Contatos dos responsáveis por aluno</p>
         </div>
         
-        <div className="flex items-center gap-4 school-card p-2 w-full sm:w-auto">
-          <div className="p-2 bg-accent-mustard/10 text-accent-terracotta dark:text-accent-mustard rounded-xl">
+        <div className="flex items-center gap-4 school-card p-2 w-full sm:w-auto border-2 border-school-sankofa/20 focus-within:border-accent-mustard transition-all">
+          <div className="p-2 bg-accent-mustard/20 text-accent-terracotta dark:text-accent-mustard rounded-xl shadow-sm">
             <Filter size={20} />
           </div>
           <select 
             value={selectedRoute}
             onChange={(e) => setSelectedRoute(e.target.value)}
-            className="bg-transparent border-none focus:ring-0 text-school-text dark:text-dark-text font-medium pr-8 cursor-pointer w-full"
+            className="bg-transparent border-none focus:ring-0 text-school-text dark:text-dark-text font-bold pr-8 cursor-pointer w-full appearance-none"
           >
-            <option value="all">Todas as Rotas</option>
+            <option value="all" className="bg-school-bg dark:bg-dark-bg">Todas as Rotas</option>
             {routes.map(r => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={r.id} value={r.id} className="bg-school-bg dark:bg-dark-bg">{r.name}</option>
             ))}
           </select>
         </div>

@@ -82,39 +82,39 @@ export const Incidents: React.FC = () => {
 
       <div className="school-card overflow-hidden">
         <div className="p-6 border-b border-school-sankofa/10 dark:border-dark-sankofa/10 flex flex-wrap gap-4 items-center bg-school-bg/30 dark:bg-dark-bg/30">
-          <div className="flex items-center gap-2 text-school-text/60 dark:text-dark-text/60 font-medium">
+          <div className="flex items-center gap-2 text-accent-terracotta dark:text-accent-mustard font-bold uppercase tracking-wider text-sm">
             <Filter size={20} />
             <span>Filtros:</span>
           </div>
           <select 
             value={filterRoute}
             onChange={(e) => setFilterRoute(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard"
+            className="px-4 py-2 rounded-xl border-2 border-school-sankofa/20 bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text font-medium focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/20 transition-all appearance-none cursor-pointer"
           >
-            <option value="all">Todas as Rotas</option>
+            <option value="all" className="bg-school-bg dark:bg-dark-bg">Todas as Rotas</option>
             {routes.map(r => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={r.id} value={r.id} className="bg-school-bg dark:bg-dark-bg">{r.name}</option>
             ))}
           </select>
           <select 
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard"
+            className="px-4 py-2 rounded-xl border-2 border-school-sankofa/20 bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text font-medium focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/20 transition-all appearance-none cursor-pointer"
           >
-            <option value="all">Todos os Tipos</option>
-            <option value="indiscipline">Indisciplina</option>
-            <option value="health">Saúde</option>
-            <option value="other">Outros</option>
+            <option value="all" className="bg-school-bg dark:bg-dark-bg">Todos os Tipos</option>
+            <option value="indiscipline" className="bg-school-bg dark:bg-dark-bg">Indisciplina</option>
+            <option value="health" className="bg-school-bg dark:bg-dark-bg">Saúde</option>
+            <option value="other" className="bg-school-bg dark:bg-dark-bg">Outros</option>
           </select>
           <select 
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard"
+            className="px-4 py-2 rounded-xl border-2 border-school-sankofa/20 bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text font-medium focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/20 transition-all appearance-none cursor-pointer"
           >
-            <option value="all">Todas as Gravidades</option>
-            <option value="low">Baixa</option>
-            <option value="medium">Média</option>
-            <option value="high">Alta</option>
+            <option value="all" className="bg-school-bg dark:bg-dark-bg">Todas as Gravidades</option>
+            <option value="low" className="bg-school-bg dark:bg-dark-bg">Baixa</option>
+            <option value="medium" className="bg-school-bg dark:bg-dark-bg">Média</option>
+            <option value="high" className="bg-school-bg dark:bg-dark-bg">Alta</option>
           </select>
         </div>
 

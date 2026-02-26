@@ -4,10 +4,13 @@ import { format, isSunday } from 'date-fns';
 export type UserProfile = {
   id: string;
   email: string;
-  password?: string; // Stored locally for simulation
+  password?: string;
   name: string;
   role: 'admin' | 'manager' | 'monitor' | null;
   routeId?: string;
+  avatar?: string;
+  securityQuestion?: string;
+  securityAnswer?: string;
 };
 
 export type Route = {
@@ -73,7 +76,8 @@ type AppState = {
   currentUser: UserProfile | null;
   users: UserProfile[];
   login: (email: string, password?: string) => boolean;
-  register: (email: string, name: string, password?: string, role?: 'admin' | 'manager' | 'monitor' | null) => { success: boolean; error?: string };
+  register: (email: string, name: string, password?: string, role?: 'admin' | 'manager' | 'monitor' | null, securityQuestion?: string, securityAnswer?: string, avatar?: string) => { success: boolean; error?: string };
+  resetPassword: (email: string, securityAnswer: string, newPassword: string) => { success: boolean; error?: string };
   logout: () => void;
   updateProfile: (profile: Partial<UserProfile>) => void;
   deleteUser: (id: string) => void;
@@ -96,6 +100,7 @@ type AppState = {
   markAttendance: (studentId: string, date: string, type: 'boarding' | 'alighting', value: boolean) => void;
   addIncident: (incident: Omit<Incident, 'id' | 'date'>) => void;
   deleteIncident: (id: string) => void;
+  isMonitorAccessAllowed: () => boolean;
 };
 
 const defaultState: AppState = {
@@ -103,6 +108,7 @@ const defaultState: AppState = {
   users: [],
   login: () => false,
   register: () => ({ success: false }),
+  resetPassword: () => ({ success: false }),
   logout: () => {},
   updateProfile: () => {},
   deleteUser: () => {},
@@ -125,6 +131,7 @@ const defaultState: AppState = {
   markAttendance: () => {},
   addIncident: () => {},
   deleteIncident: () => {},
+  isMonitorAccessAllowed: () => true,
 };
 
 const AppContext = createContext<AppState>(defaultState);
@@ -266,7 +273,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return false;
   };
 
-  const register = (email: string, name: string, password?: string, role: 'admin' | 'manager' | 'monitor' | null = null) => {
+  const resetPassword = (email: string, securityAnswer: string, newPassword: string) => {
+    const userIndex = users.findIndex(u => u.email === email);
+    if (userIndex === -1) {
+      return { success: false, error: 'Usuário não encontrado.' };
+    }
+    const user = users[userIndex];
+    if (user.securityAnswer?.toLowerCase() !== securityAnswer.toLowerCase()) {
+      return { success: false, error: 'Resposta de segurança incorreta.' };
+    }
+    const updatedUsers = [...users];
+    updatedUsers[userIndex] = { ...user, password: newPassword };
+    setUsers(updatedUsers);
+    return { success: true };
+  };
+
+  const register = (email: string, name: string, password?: string, role: 'admin' | 'manager' | 'monitor' | null = null, securityQuestion?: string, securityAnswer?: string, avatar?: string) => {
     if (users.some(u => u.email === email)) {
       return { success: false, error: 'Este email já está em uso.' };
     }
@@ -284,6 +306,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       name,
       password,
       role,
+      securityQuestion,
+      securityAnswer,
+      avatar: avatar || 'afro-1'
     };
     setUsers([...users, newUser]);
     setCurrentUser(newUser);
@@ -306,10 +331,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (currentUser?.id === id) {
       setCurrentUser(null);
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   const addRoute = (route: Omit<Route, 'id'>) => {
@@ -405,6 +426,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIncidents(incidents.filter(i => i.id !== id));
   };
 
+  const isMonitorAccessAllowed = () => {
+    if (currentUser?.role !== 'monitor') return true;
+    
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+    const hour = now.getHours();
+    
+    // Weekdays (1-5) between 6h and 18h
+    const isWeekday = day >= 1 && day <= 5;
+    const isWorkingHours = hour >= 6 && hour < 18;
+    
+    return isWeekday && isWorkingHours;
+  };
+
   const updateSchoolYearPeriod = (period: SchoolYearPeriod) => {
     setSchoolYearPeriod(period);
   };
@@ -429,13 +464,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider value={{
-      currentUser, users, login, register, logout, updateProfile, deleteUser,
+      currentUser, users, login, register, resetPassword, logout, updateProfile, deleteUser,
       routes, students, attendance, incidents,
       schoolYearPeriod, updateSchoolYearPeriod,
       notifications, addNotification, markNotificationAsRead, clearNotifications,
       addRoute, updateRoute, deleteRoute,
       addStudent, updateStudent, deleteStudent,
-      markAttendance, addIncident, deleteIncident
+      markAttendance, addIncident, deleteIncident,
+      isMonitorAccessAllowed
     }}>
       {children}
     </AppContext.Provider>

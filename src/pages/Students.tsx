@@ -93,17 +93,17 @@ export const Students: React.FC = () => {
             />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="p-3 bg-accent-mustard/10 text-accent-terracotta dark:text-accent-mustard rounded-xl">
+            <div className="p-3 bg-accent-mustard/20 text-accent-terracotta dark:text-accent-mustard rounded-xl shadow-sm">
               <Filter size={20} />
             </div>
             <select 
               value={routeFilter}
               onChange={(e) => setRouteFilter(e.target.value)}
-              className="w-full sm:w-48 px-4 py-3 rounded-2xl border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text shadow-sm focus:border-accent-mustard focus:ring-accent-mustard"
+              className="w-full sm:w-48 px-4 py-3 rounded-2xl border-2 border-school-sankofa/20 bg-school-bg dark:bg-dark-bg text-school-text dark:text-dark-text shadow-sm focus:border-accent-mustard focus:ring-4 focus:ring-accent-mustard/20 font-medium transition-all appearance-none cursor-pointer"
             >
-              <option value="all">Todas as Rotas</option>
+              <option value="all" className="bg-school-bg dark:bg-dark-bg">Todas as Rotas</option>
               {routes.map(r => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+                <option key={r.id} value={r.id} className="bg-school-bg dark:bg-dark-bg">{r.name}</option>
               ))}
             </select>
           </div>
