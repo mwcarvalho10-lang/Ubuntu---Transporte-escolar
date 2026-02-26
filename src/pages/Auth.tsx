@@ -14,6 +14,7 @@ export const Auth: React.FC = () => {
   const [name, setName] = useState('');
   const [securityQuestion, setSecurityQuestion] = useState('');
   const [securityAnswer, setSecurityAnswer] = useState('');
+  const [accessCode, setAccessCode] = useState('');
   const [avatar, setAvatar] = useState('afro-1');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -56,6 +57,16 @@ export const Auth: React.FC = () => {
         setError('As senhas não coincidem.');
         return;
       }
+      
+      if (emailDomain === '@admin.com' && accessCode !== 'Admin123') {
+        setError('Senha de autorização para Administrador incorreta.');
+        return;
+      }
+      if (emailDomain === '@gestao.com' && accessCode !== 'Gestor123') {
+        setError('Senha de autorização para Gestor incorreta.');
+        return;
+      }
+
       const fullEmail = `${emailPrefix}${emailDomain}`;
       let role: 'admin' | 'manager' | 'monitor' = 'monitor';
       if (emailDomain === '@admin.com') role = 'admin';
@@ -192,6 +203,21 @@ export const Auth: React.FC = () => {
                   value={securityAnswer}
                   onChange={(e) => setSecurityAnswer(e.target.value)}
                   placeholder="Sua resposta"
+                  className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard transition-colors outline-none"
+                />
+              </div>
+            )}
+
+            {authMode === 'register' && (emailDomain === '@admin.com' || emailDomain === '@gestao.com') && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                <label className="text-sm font-semibold text-school-text/70 dark:text-dark-text/70">
+                  Senha de Autorização ({emailDomain === '@admin.com' ? 'Admin' : 'Gestor'})
+                </label>
+                <input 
+                  type="password" 
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value)}
+                  placeholder="Digite a senha de autorização"
                   className="w-full px-4 py-3 rounded-xl border border-school-sankofa/20 bg-school-bg/50 dark:bg-dark-bg/50 text-school-text dark:text-dark-text focus:border-accent-mustard focus:ring-accent-mustard transition-colors outline-none"
                 />
               </div>
