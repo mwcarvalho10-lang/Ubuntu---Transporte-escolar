@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppContext, Student } from '../store';
 import { Plus, Search, Edit2, Trash2, History, Filter } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 export const Students: React.FC = () => {
   const { students, routes, deleteStudent, addStudent, updateStudent, attendance } = useAppContext();
@@ -345,11 +345,11 @@ export const Students: React.FC = () => {
               <div className="space-y-4">
                 {attendance
                   .filter(a => a.studentId === historyStudent.id)
-                  .sort((a, b) => b.date.localeCompare(a.date))
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                   .map(record => (
                     <div key={record.id} className="flex items-center justify-between p-4 rounded-2xl border border-school-sankofa/10 dark:border-dark-sankofa/10 bg-school-bg/50 dark:bg-dark-bg/50">
                       <div className="font-medium text-school-text dark:text-dark-text">
-                        {format(parseISO(record.date), 'dd/MM/yyyy')}
+                        {format(new Date(record.date + 'T12:00:00'), 'dd/MM/yyyy')}
                       </div>
                       <div className="flex gap-6">
                         <div className="flex flex-col items-end">
