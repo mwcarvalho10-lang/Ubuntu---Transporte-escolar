@@ -74,6 +74,7 @@ export type Notification = {
 };
 
 type AppState = {
+  isLoaded: boolean;
   currentUser: UserProfile | null;
   users: UserProfile[];
   login: (email: string, password?: string) => boolean;
@@ -105,6 +106,7 @@ type AppState = {
 };
 
 const defaultState: AppState = {
+  isLoaded: false,
   currentUser: null,
   users: [],
   login: () => false,
@@ -188,85 +190,87 @@ const initialStudents: Student[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [users, setUsers] = useState<UserProfile[]>(() => {
-    const saved = localStorage.getItem('school_users');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
-    const saved = localStorage.getItem('school_current_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-
-  const [routes, setRoutes] = useState<Route[]>(() => {
-    const saved = localStorage.getItem('school_routes');
-    return saved ? JSON.parse(saved) : initialRoutes;
-  });
-
-  const [students, setStudents] = useState<Student[]>(() => {
-    const saved = localStorage.getItem('school_students');
-    return saved ? JSON.parse(saved) : initialStudents;
-  });
-
-  const [attendance, setAttendance] = useState<AttendanceRecord[]>(() => {
-    const saved = localStorage.getItem('school_attendance');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [incidents, setIncidents] = useState<Incident[]>(() => {
-    const saved = localStorage.getItem('school_incidents');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [schoolYearPeriod, setSchoolYearPeriod] = useState<SchoolYearPeriod | null>(() => {
-    const saved = localStorage.getItem('school_year_period');
-    return saved ? JSON.parse(saved) : null;
-  });
-
-  const [notifications, setNotifications] = useState<Notification[]>(() => {
-    const saved = localStorage.getItem('school_notifications');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [routes, setRoutes] = useState<Route[]>(initialRoutes);
+  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [schoolYearPeriod, setSchoolYearPeriod] = useState<SchoolYearPeriod | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
+    
+    // Load data from backend
+    const loadData = async () => {
+      try {
+        const res = await fetch('/api/store');
+        const data = await res.json();
+        
+        if (data.school_users) setUsers(JSON.parse(data.school_users));
+        if (data.school_current_user) setCurrentUser(JSON.parse(data.school_current_user));
+        if (data.school_routes) setRoutes(JSON.parse(data.school_routes));
+        if (data.school_students) setStudents(JSON.parse(data.school_students));
+        if (data.school_attendance) setAttendance(JSON.parse(data.school_attendance));
+        if (data.school_incidents) setIncidents(JSON.parse(data.school_incidents));
+        if (data.school_year_period) setSchoolYearPeriod(JSON.parse(data.school_year_period));
+        if (data.school_notifications) setNotifications(JSON.parse(data.school_notifications));
+      } catch (e) {
+        console.error("Failed to load data", e);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+    
+    loadData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('school_routes', JSON.stringify(routes));
-  }, [routes]);
-
-  useEffect(() => {
-    localStorage.setItem('school_students', JSON.stringify(students));
-  }, [students]);
-
-  useEffect(() => {
-    localStorage.setItem('school_attendance', JSON.stringify(attendance));
-  }, [attendance]);
-
-  useEffect(() => {
-    localStorage.setItem('school_incidents', JSON.stringify(incidents));
-  }, [incidents]);
-
-  useEffect(() => {
-    localStorage.setItem('school_year_period', JSON.stringify(schoolYearPeriod));
-  }, [schoolYearPeriod]);
-
-  useEffect(() => {
-    localStorage.setItem('school_notifications', JSON.stringify(notifications));
-  }, [notifications]);
-
-  useEffect(() => {
-    localStorage.setItem('school_users', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('school_current_user', JSON.stringify(currentUser));
-    } else {
-      localStorage.removeItem('school_current_user');
+  const saveToStore = async (key: string, value: any) => {
+    if (!isLoaded) return;
+    try {
+      await fetch(`/api/store/${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: value === null ? null : JSON.stringify(value) })
+      });
+    } catch (e) {
+      console.error(`Failed to save ${key}`, e);
     }
-  }, [currentUser]);
+  };
+
+  useEffect(() => {
+    saveToStore('school_routes', routes);
+  }, [routes, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_students', students);
+  }, [students, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_attendance', attendance);
+  }, [attendance, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_incidents', incidents);
+  }, [incidents, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_year_period', schoolYearPeriod);
+  }, [schoolYearPeriod, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_notifications', notifications);
+  }, [notifications, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_users', users);
+  }, [users, isLoaded]);
+
+  useEffect(() => {
+    saveToStore('school_current_user', currentUser);
+  }, [currentUser, isLoaded]);
 
   const login = (email: string, password?: string) => {
     const user = users.find(u => u.email === email && u.password === password);
@@ -468,7 +472,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider value={{
-      currentUser, users, login, register, resetPassword, logout, updateProfile, deleteUser,
+      isLoaded, currentUser, users, login, register, resetPassword, logout, updateProfile, deleteUser,
       routes, students, attendance, incidents,
       schoolYearPeriod, updateSchoolYearPeriod,
       notifications, addNotification, markNotificationAsRead, clearNotifications,

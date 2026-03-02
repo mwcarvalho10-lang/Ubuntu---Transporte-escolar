@@ -214,9 +214,9 @@ const ClockWeatherWidget = () => {
   }, []);
 
   useEffect(() => {
-    const fetchWeather = async (lat: number, lon: number) => {
+    const fetchWeather = async () => {
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=-12.9714&longitude=-38.5014&current_weather=true`);
         const data = await res.json();
         if (data.current_weather) {
           setWeather({
@@ -229,14 +229,7 @@ const ClockWeatherWidget = () => {
       }
     };
 
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => fetchWeather(position.coords.latitude, position.coords.longitude),
-        () => fetchWeather(-12.9714, -38.5014) // Default to Salvador
-      );
-    } else {
-      fetchWeather(-12.9714, -38.5014);
-    }
+    fetchWeather();
   }, []);
 
   const getWeatherIcon = (code: number) => {

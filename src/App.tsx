@@ -15,7 +15,11 @@ import { Admin } from './pages/Admin';
 import { SplashScreen } from './components/SplashScreen';
 
 const AppRoutes = () => {
-  const { currentUser } = useAppContext();
+  const { currentUser, isLoaded } = useAppContext();
+
+  if (!isLoaded) {
+    return <SplashScreen />;
+  }
 
   return (
     <>
